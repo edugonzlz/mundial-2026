@@ -104,6 +104,23 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .spain-stat{background:#141720;border-radius:10px;padding:.75rem;text-align:center}
 .spain-stat .num{font-size:1.3rem;font-weight:800;color:#f0a500}
 .spain-stat .label{font-size:.65rem;color:#7a7f93;margin-top:2px;text-transform:uppercase}
+/* bracket */
+.bracket-wrap{overflow-x:auto;padding-bottom:.5rem;-webkit-overflow-scrolling:touch}
+.bracket{display:flex;gap:0;min-width:950px}
+.bracket-col{display:flex;flex-direction:column;justify-content:space-around;flex:1;position:relative;padding:0 6px}
+.bracket-col h4{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#f0a500;text-align:center;padding:.4rem 0;margin-bottom:4px;border-bottom:1px solid #2a2d3a;flex-shrink:0}
+.b-match{background:#1a1d29;border:1px solid #2a2d3a;border-radius:8px;padding:.45rem .6rem;margin:3px 0;font-size:.65rem;transition:all .15s;flex-shrink:0}
+.b-match:hover{border-color:#f0a50040;transform:scale(1.02)}
+.b-match .bm-teams{display:flex;align-items:center;justify-content:center;gap:4px}
+.b-match .bm-team{display:flex;align-items:center;gap:4px;font-weight:600;font-size:.68rem;flex:1;min-width:0}
+.b-match .bm-team img{width:18px;height:12px;border-radius:1px;object-fit:cover;flex-shrink:0}
+.b-match .bm-team .bm-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55px}
+.b-match .bm-score{font-weight:800;font-size:.75rem;color:#f0a500;text-align:center;min-width:24px;flex-shrink:0}
+.b-match .bm-vs{font-size:.6rem;color:#7a7f93;font-weight:600}
+.b-match .bm-meta{display:flex;justify-content:center;gap:4px;margin-top:3px;font-size:.55rem;color:#5a5f73}
+.b-match .bm-meta span{white-space:nowrap}
+.b-match.bm-tbd .bm-team{color:#7a7f93;font-weight:400;font-size:.62rem}
+.b-match.bm-tbd .bm-team .bm-name{max-width:70px;font-style:italic}
 /* history tab */
 .history-section{background:#1a1d29;border:1px solid #2a2d3a;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem}
 .history-section h3{font-size:.85rem;font-weight:700;color:#f0a500;margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.5px}
@@ -157,6 +174,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
   <p>Canadá · México · Estados Unidos • 11 Jun – 19 Jul</p>
   <div class="tabs">
     <button class="tab-btn active" data-tab="calendar">Calendario</button>
+    <button class="tab-btn" data-tab="bracket">Eliminatorias</button>
     <button class="tab-btn" data-tab="spain">España</button>
     <button class="tab-btn" data-tab="groups">Grupos</button>
     <button class="tab-btn" data-tab="map">Estadios</button>
@@ -172,6 +190,14 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
     </div>
     <div id="calendar-filter" class="cal-filter"></div>
     <div id="calendar-content" class="calendar-list"></div>
+  </div>
+
+  <div id="tab-bracket" class="tab-content">
+    <div id="bracket-loading" class="loading">
+      <div class="spinner"></div>
+      <p>Cargando eliminatorias…</p>
+    </div>
+    <div id="bracket-content"></div>
   </div>
 
   <div id="tab-spain" class="tab-content">
@@ -336,7 +362,7 @@ function renderGroupFilters(){
 
 function renderCalendar(){
   const el=document.getElementById('calendar-content');
-  let filtered=[...state.games].filter(g=>g.finished!=='TRUE'&&g.finished!==true);
+  let filtered=[...state.games].filter(g=>g.type==='group'&&g.finished!=='TRUE'&&g.finished!==true);
   if(state.calendarGroup){
     filtered=filtered.filter(g=>g.group===state.calendarGroup||
       (g.type!=='group'&&g.home_team_name_en&&g.away_team_name_en));
@@ -420,10 +446,12 @@ async function refresh(){
     renderCalendar();
     renderSpain();
     renderHistory();
+    renderBracket();
     document.getElementById('groups-loading').style.display='none';
     document.getElementById('calendar-loading').style.display='none';
     document.getElementById('spain-loading').style.display='none';
     document.getElementById('history-loading').style.display='none';
+    document.getElementById('bracket-loading').style.display='none';
   }catch(e){
     console.error('Error al cargar datos:', e);
   }
@@ -881,6 +909,78 @@ function renderHistory(){
         }).join('')}
       </div>
     </div>`;
+}
+
+function renderBracket(){
+  const el=document.getElementById('bracket-content');
+  const knockouts=state.games.filter(g=>g.type!=='group').sort((a,b)=>{
+    const order={r32:1,r16:2,qf:3,sf:4,third:5,final:6};
+    return (order[g.type]||9)-(order[b.type]||9)||a.id-b.id;
+  });
+  const roundLabels={r32:'Ronda de 32',r16:'Octavos',qf:'Cuartos',sf:'Semifinales',third:'3er Puesto',final:'FINAL'};
+  const roundKeys=['r32','r16','qf','sf','third','final'];
+  const counts={r32:16,r16:8,qf:4,sf:2,third:1,final:1};
+
+  const grouped={};
+  knockouts.forEach(g=>{if(!grouped[g.type]) grouped[g.type]=[];grouped[g.type].push(g)});
+
+  function cardHtml(g){
+    const homeKnown=g.home_team_name_en||g.home_team_label;
+    const awayKnown=g.away_team_name_en||g.away_team_label;
+    const homeTeam=g.home_team_name_en?getTeam(g.home_team_id):null;
+    const awayTeam=g.away_team_name_en?getTeam(g.away_team_id):null;
+    const homeName=g.home_team_name_en||homeKnown||'TBD';
+    const awayName=g.away_team_name_en||awayKnown||'TBD';
+    const homeFlag=homeTeam?homeTeam.flag:'';
+    const awayFlag=awayTeam?awayTeam.flag:'';
+    const isFinished=g.finished==='TRUE'||g.finished===true;
+    const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
+    const isTBD=!g.home_team_name_en&&!g.away_team_name_en;
+    const st=spainTime(g.local_date,g.stadium_id);
+    const stadium=getStadium(g.stadium_id);
+    const tbdClass=isTBD?' bm-tbd':'';
+
+    let sc;
+    if(isFinished) sc=`<span class="bm-score">${g.home_score??''}-${g.away_score??''}</span>`;
+    else if(isLive) sc=`<span class="bm-score">${g.home_score??''}-${g.away_score??''}</span>`;
+    else sc=`<span class="bm-vs">VS</span>`;
+
+    const metaParts=[];
+    if(st.time!=='--:--') metaParts.push(st.time+'h');
+    if(stadium) metaParts.push(stadium.name_en);
+
+    return `<div class="b-match${tbdClass}">
+      <div class="bm-teams">
+        <div class="bm-team">${homeFlag?`<img src="${homeFlag}">`:''}<span class="bm-name">${homeName}</span></div>
+        ${sc}
+        <div class="bm-team">${awayFlag?`<img src="${awayFlag}">`:''}<span class="bm-name">${awayName}</span></div>
+      </div>
+      ${metaParts.length?`<div class="bm-meta"><span>${metaParts.join(' · ')}</span></div>`:''}
+    </div>`;
+  }
+
+  function colHtml(round){
+    const games=grouped[round]||[];
+    const expected=counts[round];
+    const fill=expected-games.length;
+    let html='';
+    for(let i=0;i<fill;i++) html+=`<div style="height:0"></div>`;
+    html+=games.map(g=>cardHtml(g)).join('');
+    if(round==='final'&&grouped['third']){
+      html+=`<div style="border-top:1px solid #2a2d3a;margin:8px 0;padding-top:4px;font-size:.55rem;font-weight:700;text-align:center;color:#7a7f93;text-transform:uppercase;letter-spacing:.5px">3er Puesto</div>`;
+      html+=(grouped['third']||[]).map(g=>cardHtml(g)).join('');
+    }
+    return html;
+  }
+
+  el.innerHTML=`<div class="bracket-wrap"><div class="bracket">
+    ${roundKeys.filter(r=>r!=='third'&&r!=='final').map(r=>`<div class="bracket-col">
+      <h4>${roundLabels[r]}</h4>${colHtml(r)}
+    </div>`).join('')}
+    <div class="bracket-col" style="max-width:160px">
+      <h4>Fase Final</h4>${colHtml('final')}
+    </div>
+  </div></div>`;
 }
 
 document.querySelector('[data-tab="map"]').addEventListener('click',()=>{
