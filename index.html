@@ -41,6 +41,15 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .cal-filter button{padding:4px 14px;border-radius:6px;border:1px solid #2a2d3a;background:#1a1d29;color:#7a7f93;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .15s}
 .cal-filter button:hover{border-color:#f0a500;color:#f0a500}
 .cal-filter button.active{background:#f0a500;color:#1a1d29;border-color:#f0a500}
+.rules-box{background:#141720;border:1px solid #2a2d3a;border-radius:10px;padding:.8rem 1rem;margin-bottom:.75rem;font-size:.75rem}
+.rules-title{font-weight:700;color:#f0a500;margin-bottom:.5rem;font-size:.78rem}
+.rules-grid{display:flex;flex-wrap:wrap;gap:4px 16px;margin-bottom:.4rem}
+.rules-item{color:#b0b5c0}
+.rules-num{display:inline-block;background:#f0a50020;color:#f0a500;font-weight:700;padding:1px 8px;border-radius:4px;font-size:.7rem}
+.rules-arrow{color:#7a7f93;font-size:.7rem;margin:0 2px}
+.rules-total{font-weight:700;color:#e4e6eb;padding-top:4px;border-top:1px solid #2a2d3a;width:100%}
+.rules-total strong{color:#f0a500}
+.rules-tiebreak{font-size:.65rem;color:#7a7f93;margin-top:2px}
 /* calendar cards - grouped by date */
 .calendar-list{display:flex;flex-direction:column;gap:0}
 .date-sep{font-size:.75rem;font-weight:700;color:#7a7f93;padding:.6rem .25rem .4rem;margin-top:.5rem;border-bottom:1px solid #2a2d3a;text-transform:uppercase;letter-spacing:.5px}
@@ -164,6 +173,12 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
   .modal{padding:0}
   .modal-header{padding:.75rem 1rem;font-size:1rem}
   .modal-body{padding:.75rem 1rem}
+  .timeline-item{flex-wrap:wrap;gap:4px 6px;padding:8px 10px}
+  .timeline-item .tyear{width:36px;font-size:.7rem}
+  .timeline-item .tflags img{width:22px;height:14px}
+  .timeline-item .tscore{font-size:.75rem;min-width:36px}
+  .timeline-item div[style*="min-width"]{min-width:auto!important;font-size:.7rem!important}
+  .timeline-item .thost{width:100%;margin-left:0;padding-left:0;margin-top:2px;font-size:.6rem}
 }
 </style>
 </head>
@@ -187,6 +202,15 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
     <div id="calendar-loading" class="loading">
       <div class="spinner"></div>
       <p>Cargando calendario…</p>
+    </div>
+    <div class="rules-box">
+      <div class="rules-title">&#8505; Fase de Grupos · 48 equipos · 12 grupos</div>
+      <div class="rules-grid">
+        <div class="rules-item"><span class="rules-num">1&ordm; y 2&ordm;</span> de cada grupo <span class="rules-arrow">&rarr;</span> <strong>24</strong></div>
+        <div class="rules-item"><span class="rules-num">Mejores 3&ordm;</span> de los 12 grupos <span class="rules-arrow">&rarr;</span> <strong>8</strong></div>
+        <div class="rules-item rules-total">Total <span class="rules-arrow">&rarr;</span> <strong>32</strong> a Ronda de 32</div>
+      </div>
+      <div class="rules-tiebreak">Desempate: Pts &middot; Diferencia de goles &middot; Goles a favor &middot; Enfrentamiento directo</div>
     </div>
     <div id="calendar-filter" class="cal-filter"></div>
     <div id="calendar-content" class="calendar-list"></div>
