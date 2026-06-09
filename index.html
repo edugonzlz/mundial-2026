@@ -40,22 +40,20 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .cal-filter button{padding:4px 14px;border-radius:6px;border:1px solid #2a2d3a;background:#1a1d29;color:#7a7f93;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .15s}
 .cal-filter button:hover{border-color:#f0a500;color:#f0a500}
 .cal-filter button.active{background:#f0a500;color:#1a1d29;border-color:#f0a500}
-/* calendar cards */
-.calendar-list{display:flex;flex-direction:column;gap:.75rem}
-.match-card{display:flex;align-items:center;gap:1rem;background:#1a1d29;border:1px solid #2a2d3a;border-radius:12px;padding:1rem 1.25rem;transition:all .15s}
-.match-card:hover{border-color:#f0a50060;transform:translateX(3px)}
-.match-card .match-stage{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:4px}
-.match-date{min-width:80px;text-align:center}
-.match-date .day{font-size:.85rem;font-weight:700;color:#e4e6eb;white-space:nowrap}
-.match-date .time{font-size:.7rem;color:#7a7f93;margin-top:2px}
-.match-date .venue-sm{font-size:.6rem;color:#5a5f73;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.match-teams{flex:1;display:flex;align-items:center;justify-content:center;gap:.75rem}
-.team-inline{cursor:pointer;display:flex;align-items:center;gap:7px;font-weight:600;font-size:.9rem}
-.team-inline:hover{color:#f0a500}
-.team-inline img{width:24px;height:16px;border-radius:2px;object-fit:cover;flex-shrink:0}
-.match-score{font-weight:800;font-size:1.1rem;min-width:44px;text-align:center;color:#f0a500}
-.match-vs{color:#7a7f93;font-size:.8rem;font-weight:600}
-.match-group-label{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.65rem;font-weight:700;letter-spacing:.5px}
+/* calendar cards - cromo format */
+.calendar-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+.cromo-card{background:linear-gradient(145deg,#1a1d29,#141720);border-radius:14px;border:2px solid #2a2d3a;padding:1rem .75rem .75rem;position:relative;overflow:hidden;transition:all .2s;cursor:default;display:flex;flex-direction:column;align-items:center;gap:6px}
+.cromo-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.cromo-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.cromo-stage{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:2px 10px;border-radius:4px;margin-bottom:4px}
+.cromo-teams{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:4px 0}
+.cromo-team{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:color .15s;flex:1}
+.cromo-team:hover{color:#f0a500}
+.cromo-team img{width:40px;height:27px;border-radius:3px;object-fit:cover;box-shadow:0 2px 6px rgba(0,0,0,.5)}
+.cromo-team .cromo-name{font-size:.7rem;font-weight:700;text-align:center;line-height:1.2;max-width:80px}
+.cromo-score{font-size:1rem;font-weight:800;min-width:36px;text-align:center;flex-shrink:0}
+.cromo-info{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:4px;font-size:.6rem;color:#7a7f93;text-align:center}
+.cromo-info span{background:#0f1117;padding:2px 8px;border-radius:4px;white-space:nowrap}
 .loading{text-align:center;padding:4rem 2rem;color:#7a7f93}
 .loading .spinner{width:40px;height:40px;border:3px solid #2a2d3a;border-top-color:#f0a500;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -83,12 +81,10 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
   header h1{font-size:1.5rem}
   .container{padding:1rem}
   .groups-grid{grid-template-columns:1fr}
-  .match-card{flex-wrap:wrap;gap:.5rem;padding:.75rem 1rem}
-  .match-teams{width:100%;justify-content:space-between}
-  .match-date{min-width:70px}
-  .match-info{min-width:auto;text-align:left;width:100%}
-  .team-inline{font-size:.8rem}
-  .team-inline img{width:20px;height:13px}
+  .calendar-list{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem}
+  .cromo-team img{width:32px;height:22px}
+  .cromo-team .cromo-name{font-size:.65rem;max-width:65px}
+  .cromo-score{font-size:.85rem;min-width:28px}
 }
 </style>
 </head>
@@ -256,51 +252,52 @@ function renderCalendar(){
   el.innerHTML=sorted.map(g=>{
     const homeTeam=getTeam(g.home_team_id);
     const awayTeam=getTeam(g.away_team_id);
+    const homeId=homeTeam?homeTeam.id:g.home_team_id;
+    const awayId=awayTeam?awayTeam.id:g.away_team_id;
     const homeName=g.home_team_name_en||(homeTeam?homeTeam.name_en:'TBD');
     const awayName=g.away_team_name_en||(awayTeam?awayTeam.name_en:'TBD');
     const homeFlag=homeTeam?homeTeam.flag:'';
     const awayFlag=awayTeam?awayTeam.flag:'';
-    const homeId=homeTeam?homeTeam.id:g.home_team_id;
-    const awayId=awayTeam?awayTeam.id:g.away_team_id;
-    const stadium=getStadium(g.stadium_id);
-    const venueStr=stadium?`${stadium.name_en}`:'';
     const dt=new Date(g.local_date);
     const dateStr=dt.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});
     const timeStr=dt.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',hour12:false});
     const isFinished=g.finished==='TRUE'||g.finished===true;
     const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
-
-    let scoreHtml;
-    if(isFinished){
-      scoreHtml=`<span class="match-score">${g.home_score??''}-${g.away_score??''}</span> <span class="badge-final">Final</span>`;
-    }else if(isLive){
-      scoreHtml=`<span class="match-score">${g.home_score??''}-${g.away_score??''}</span> <span class="badge-live">Live</span>`;
-    }else{
-      scoreHtml=`<span class="match-vs">VS</span>`;
-    }
-
+    const stadium=getStadium(g.stadium_id);
+    const venueStr=stadium?stadium.name_en:'';
     const grp=g.group||'';
     const typeLabels={group:`Grupo ${grp}`,r32:'Ronda de 32',r16:'Octavos',qf:'Cuartos',sf:'Semifinal',third:'3er Puesto',final:'Final'};
     const stageLabel=typeLabels[g.type]||grp;
     const grpColor=GROUP_COLORS[grp]||'#666';
 
-    return `<div class="match-card">
-      <div style="display:flex;flex-direction:column;align-items:center;min-width:80px;flex-shrink:0">
-        <span class="match-stage" style="background:${grpColor}20;color:${grpColor}">${stageLabel}</span>
-        <div class="match-date">
-          <div class="day">${dateStr}</div>
-          <div class="time">${timeStr}</div>
-          ${venueStr?`<div class="venue-sm">${venueStr}</div>`:''}
+    let scoreHtml;
+    if(isFinished) scoreHtml=`<span class="cromo-score" style="color:#27ae60">${g.home_score??''}-${g.away_score??''}</span>`;
+    else if(isLive) scoreHtml=`<span class="cromo-score" style="color:#e74c3c">${g.home_score??''}-${g.away_score??''}</span>`;
+    else scoreHtml=`<span class="cromo-score" style="color:#7a7f93;font-size:.75rem">VS</span>`;
+
+    const badge=isFinished?' <span class="badge-final">Final</span>':(isLive?' <span class="badge-live">Live</span>':'');
+
+    return `<div class="cromo-card" style="border-color:${grpColor}40">
+      <div style="background:${grpColor};position:absolute;top:0;left:0;right:0;height:4px"></div>
+      <div class="cromo-stage" style="background:${grpColor}20;color:${grpColor}">${stageLabel}</div>
+      <div class="cromo-teams">
+        <div class="cromo-team" data-team="${homeId}">
+          ${homeFlag?`<img src="${homeFlag}" alt="" loading="lazy">`:''}
+          <span class="cromo-name">${homeName}</span>
+        </div>
+        ${scoreHtml}${badge}
+        <div class="cromo-team" data-team="${awayId}">
+          ${awayFlag?`<img src="${awayFlag}" alt="" loading="lazy">`:''}
+          <span class="cromo-name">${awayName}</span>
         </div>
       </div>
-      <div class="match-teams">
-        <div class="team-inline" data-team="${homeId}">${homeFlag?`<img src="${homeFlag}" alt="" loading="lazy">`:''}${homeName}</div>
-        ${scoreHtml}
-        <div class="team-inline" data-team="${awayId}">${awayFlag?`<img src="${awayFlag}" alt="" loading="lazy">`:''}${awayName}</div>
+      <div class="cromo-info">
+        <span>${dateStr} ${timeStr}</span>
+        ${venueStr?`<span>${venueStr}</span>`:''}
       </div>
     </div>`;
   }).join('');
-  el.querySelectorAll('.team-inline[data-team]').forEach(c=>c.addEventListener('click',e=>{
+  el.querySelectorAll('.cromo-team[data-team]').forEach(c=>c.addEventListener('click',e=>{
     e.stopPropagation();
     const team=getTeam(c.dataset.team);
     if(team) openTeamModal(team);
