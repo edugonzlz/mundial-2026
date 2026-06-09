@@ -374,7 +374,7 @@ function initMap(readyOnly){
   if(state._map) return;
   state._map=L.map('map-container',{zoomControl:false,attributionControl:true})
     .setView([39.5,-100.5],4);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
     maxZoom:18,subdomains:'abcd',attribution:'&copy; <a href="https://carto.com/">CARTO</a>'
   }).addTo(state._map);
   L.control.zoom({position:'bottomright'}).addTo(state._map);
