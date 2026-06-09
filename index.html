@@ -77,6 +77,18 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .stadium-pin{background:0 0!important;border:none!important}
 .stadium-pin>div{position:relative;display:flex;align-items:center;justify-content:center;background:#f0a500;color:#fff;font-weight:800;font-size:11px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 .stadium-pin>div>span{transform:rotate(45deg)}
+/* spain tab */
+.spain-hero{display:flex;align-items:center;gap:1.25rem;background:linear-gradient(135deg,#1a1d29,#0f1117);border:1px solid #2a2d3a;border-radius:14px;padding:1.5rem;margin-bottom:1.25rem}
+.spain-hero img{width:64px;height:43px;border-radius:4px;box-shadow:0 2px 10px rgba(0,0,0,.5)}
+.spain-hero h2{font-size:1.5rem;font-weight:800}
+.spain-hero .spain-meta{display:flex;gap:12px;margin-top:4px;font-size:.8rem;color:#7a7f93}
+.spain-hero .spain-meta span{background:#141720;padding:3px 10px;border-radius:6px}
+.spain-section{background:#1a1d29;border:1px solid #2a2d3a;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem}
+.spain-section h3{font-size:.85rem;font-weight:700;color:#f0a500;margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.5px}
+.spain-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.75rem}
+.spain-stat{background:#141720;border-radius:10px;padding:.75rem;text-align:center}
+.spain-stat .num{font-size:1.3rem;font-weight:800;color:#f0a500}
+.spain-stat .label{font-size:.65rem;color:#7a7f93;margin-top:2px;text-transform:uppercase}
 @media(max-width:768px){
   header h1{font-size:1.5rem}
   .container{padding:1rem}
@@ -96,6 +108,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
   <div class="tabs">
     <button class="tab-btn active" data-tab="groups">Grupos</button>
     <button class="tab-btn" data-tab="calendar">Calendario</button>
+    <button class="tab-btn" data-tab="spain">España</button>
     <button class="tab-btn" data-tab="map">Estadios</button>
   </div>
 </header>
@@ -124,6 +137,14 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
       <p>Cargando mapa…</p>
     </div>
     <div id="map-container" style="height:75vh;border-radius:12px;overflow:hidden;border:1px solid #2a2d3a"></div>
+  </div>
+
+  <div id="tab-spain" class="tab-content">
+    <div id="spain-loading" class="loading">
+      <div class="spinner"></div>
+      <p>Cargando información de España…</p>
+    </div>
+    <div id="spain-content"></div>
   </div>
 </div>
 
@@ -310,8 +331,10 @@ async function refresh(){
     renderGroups();
     renderGroupFilters();
     renderCalendar();
+    renderSpain();
     document.getElementById('groups-loading').style.display='none';
     document.getElementById('calendar-loading').style.display='none';
+    document.getElementById('spain-loading').style.display='none';
   }catch(e){
     console.error('Error al cargar datos:', e);
   }
@@ -385,22 +408,20 @@ function addMarkers(map){
     if(!coords) return;
     const matches=getStadiumMatches(s.id);
     const matchCount=matches.length;
-    const size=Math.min(26+matchCount*2,46);
+    const size=Math.min(16+matchCount,34);
     const m=L.marker(coords,{
       icon:L.divIcon({
         className:'stadium-pin',
-        html:`<div style="width:${size}px;height:${size}px;font-size:${matchCount>9?9:11}px"><span>${matchCount}</span></div>`,
+        html:`<div style="width:${size}px;height:${size}px;font-size:9px"><span>${matchCount}</span></div>`,
         iconSize:[size,size],
-        iconAnchor:[size/2,size],
-        popupAnchor:[0,-size+6]
+        iconAnchor:[size/2,size*0.85],
+        popupAnchor:[0,-size+4]
       })
     }).addTo(map);
     m.bindPopup(`
-      <div style="font-weight:700;font-size:1rem">${s.name_en}</div>
-      <div style="font-size:.8rem;color:#888">${s.city_en}, ${s.country_en} &middot; ${s.capacity.toLocaleString()} asientos</div>
-      <div style="font-size:.8rem;color:#f0a500;cursor:pointer;text-decoration:underline" class="modal-trigger">${matchCount} partidos &rarr;</div>`,
+      <div style="font-weight:700;font-size:.9rem">${s.name_en}</div>
+      <div style="font-size:.7rem;color:#aaa;margin-top:2px"><a href="#" style="color:#f0a500;text-decoration:none;font-weight:700" class="popup-modal-link" data-stadium="${s.id}">${matchCount} partidos &rarr;</a></div>`,
       {className:'stadium-popup',closeButton:false});
-    m.on('click',()=>openModal(s));
   });
 }
 
@@ -409,7 +430,7 @@ function initMap(readyOnly){
   if(state._map) return;
   state._map=L.map('map-container',{zoomControl:false,attributionControl:true})
     .setView([39.5,-100.5],4);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
     maxZoom:18,subdomains:'abcd',attribution:'&copy; <a href="https://carto.com/">CARTO</a>'
   }).addTo(state._map);
   L.control.zoom({position:'bottomright'}).addTo(state._map);
@@ -510,7 +531,147 @@ document.getElementById('modal-overlay').addEventListener('click',(e)=>{
   if(e.target===e.currentTarget) document.getElementById('modal-overlay').classList.remove('open');
 });
 
-// init map when tab is first shown
+// open modal when clicking "X partidos →" in map popup
+document.addEventListener('click',e=>{
+  const link=e.target.closest('.popup-modal-link');
+  if(!link) return;
+  e.preventDefault();
+  const stadium=state.stadiums.find(s=>String(s.id)===link.dataset.stadium);
+  if(stadium) openModal(stadium);
+});
+
+function renderSpain(){
+  const el=document.getElementById('spain-content');
+  const team=state.teams.find(t=>t.name_en==='Spain');
+  if(!team){el.innerHTML='<div class="loading"><p>No se encontró información de España</p></div>';return}
+  const grpData=state.groups.find(g=>g.name===team.groups);
+  const grpColor=GROUP_COLORS[team.groups]||'#666';
+  const teamInGroup=grpData?grpData.teams.find(t=>String(t.team_id)===String(team.id)):null;
+  const teamGames=state.games.filter(g=>
+    String(g.home_team_id)===String(team.id)||String(g.away_team_id)===String(team.id)
+  ).sort((a,b)=>new Date(a.local_date)-new Date(b.local_date)||a.id-b.id);
+  const wins=teamGames.filter(g=>{
+    if(g.finished!=='TRUE'&&g.finished!==true) return false;
+    const isHome=String(g.home_team_id)===String(team.id);
+    return isHome?Number(g.home_score)>Number(g.away_score):Number(g.away_score)>Number(g.home_score);
+  }).length;
+  const draws=teamGames.filter(g=>{
+    if(g.finished!=='TRUE'&&g.finished!==true) return false;
+    return Number(g.home_score)===Number(g.away_score)&&g.home_score!==null;
+  }).length;
+  const gf=teamGames.reduce((s,g)=>{
+    if(g.finished!=='TRUE'&&g.finished!==true) return s;
+    return s+(String(g.home_team_id)===String(team.id)?Number(g.home_score||0):Number(g.away_score||0));
+  },0);
+  const ga=teamGames.reduce((s,g)=>{
+    if(g.finished!=='TRUE'&&g.finished!==true) return s;
+    return s+(String(g.home_team_id)===String(team.id)?Number(g.away_score||0):Number(g.home_score||0));
+  },0);
+  const mp=teamInGroup?teamInGroup.mp:teamGames.filter(g=>g.finished==='TRUE'||g.finished===true).length;
+
+  el.innerHTML=`
+    <div class="spain-hero">
+      ${team.flag?`<img src="${team.flag}" alt="">`:''}
+      <div>
+        <h2>${team.name_en}</h2>
+        <div class="spain-meta">
+          <span>FIFA: ${team.fifa_code||'—'}</span>
+          <span style="background:${grpColor}30;color:${grpColor}">Grupo ${team.groups}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="spain-section">
+      <h3>Estadísticas</h3>
+      <div class="spain-grid">
+        <div class="spain-stat"><div class="num">${mp}</div><div class="label">Partidos</div></div>
+        <div class="spain-stat"><div class="num">${wins}</div><div class="label">Victorias</div></div>
+        <div class="spain-stat"><div class="num">${draws}</div><div class="label">Empates</div></div>
+        <div class="spain-stat"><div class="num">${mp-wins-draws}</div><div class="label">Derrotas</div></div>
+        <div class="spain-stat"><div class="num">${gf}</div><div class="label">Goles a favor</div></div>
+        <div class="spain-stat"><div class="num">${ga}</div><div class="label">Goles en contra</div></div>
+      </div>
+    </div>
+
+    ${grpData?`
+    <div class="spain-section">
+      <h3>Grupo ${grpData.name}</h3>
+      <table class="group-standings" style="font-size:.85rem">
+        <thead><tr>
+          <th>Equipo</th><th>PJ</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DG</th><th>Pts</th>
+        </tr></thead>
+        <tbody>
+          ${[...grpData.teams].sort((a,b)=>b.pts-a.pts||b.gd-a.gd).map((t,i)=>{
+            const tm=getTeam(t.team_id);
+            const isSpain=String(t.team_id)===String(team.id);
+            return `<tr style="${isSpain?'outline:2px solid '+grpColor+';outline-offset:-1px':''}">
+              <td><div class="team-cell" data-team="${t.team_id}" style="padding:2px 0">
+                <span class="rank-num">${i+1}</span>
+                <span class="group-dot" style="background:${grpColor}"></span>
+                ${tm&&tm.flag?`<img src="${tm.flag}" alt="" loading="lazy">`:''}
+                <span class="name" style="${isSpain?'color:'+grpColor:''}">${tm?tm.name_en:t.team_id}</span>
+              </div></td>
+              <td>${t.mp}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td>
+              <td>${t.gf}</td><td>${t.ga}</td><td>${t.gd}</td>
+              <td style="font-weight:700;color:${grpColor}">${t.pts}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`:''}
+
+    <div class="spain-section">
+      <h3>Partidos</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem">
+        ${teamGames.map(g=>{
+          const isHome=String(g.home_team_id)===String(team.id);
+          const opp=isHome?getTeam(g.away_team_id):getTeam(g.home_team_id);
+          const oppName=isHome?(g.away_team_name_en||''):(g.home_team_name_en||'');
+          const oppFlag=opp?opp.flag:'';
+          const oppId=isHome?g.away_team_id:g.home_team_id;
+          const dt=new Date(g.local_date);
+          const d=dt.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});
+          const t=dt.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',hour12:false});
+          const isF=g.finished==='TRUE'||g.finished===true;
+          const isL=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isF;
+          const st=getStadium(g.stadium_id);
+          const v=st?st.name_en:'';
+          const typeLabels={group:`Grupo ${g.group}`,r32:'Ronda de 32',r16:'Octavos',qf:'Cuartos',sf:'Semifinal',third:'3er Puesto',final:'Final'};
+          const sl=typeLabels[g.type]||g.group||'';
+          let sc;
+          if(isF) sc=`<span class="cromo-score" style="color:#27ae60">${g.home_score??''}-${g.away_score??''}</span>`;
+          else if(isL) sc=`<span class="cromo-score" style="color:#e74c3c">${g.home_score??''}-${g.away_score??''}</span>`;
+          else sc=`<span class="cromo-score" style="color:#7a7f93;font-size:.75rem">VS</span>`;
+          const badge=isF?' <span class="badge-final">Final</span>':(isL?' <span class="badge-live">Live</span>':'');
+          return `<div class="cromo-card" style="border-color:${grpColor}25">
+            <div style="background:${grpColor};position:absolute;top:0;left:0;right:0;height:4px"></div>
+            <div class="cromo-stage" style="background:${grpColor}15;color:${grpColor}">${sl}</div>
+            <div class="cromo-teams">
+              <div class="cromo-team" style="color:${isHome?grpColor:'#e4e6eb'}">
+                ${team.flag?`<img src="${team.flag}" alt="" loading="lazy">`:''}
+                <span class="cromo-name">${team.name_en}</span>
+              </div>
+              ${sc}${badge}
+              <div class="cromo-team" data-team="${oppId}">
+                ${oppFlag?`<img src="${oppFlag}" alt="" loading="lazy">`:''}
+                <span class="cromo-name">${oppName}</span>
+              </div>
+            </div>
+            <div class="cromo-info">
+              <span>${d} ${t}</span>
+              ${v?`<span>${v}</span>`:''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+
+  el.querySelectorAll('.team-cell[data-team], .cromo-team[data-team]').forEach(c=>c.addEventListener('click',e=>{
+    e.stopPropagation();
+    const tm=getTeam(c.dataset.team);
+    if(tm) openTeamModal(tm);
+  }));
+}
 document.querySelector('[data-tab="map"]').addEventListener('click',()=>{
   const tryInit=()=>{
     if(!state.stadiums||!state.stadiums.length){setTimeout(tryInit,100);return}
@@ -521,6 +682,10 @@ document.querySelector('[data-tab="map"]').addEventListener('click',()=>{
     },300);
   };
   setTimeout(tryInit,200);
+});
+// init spain when tab is first shown
+document.querySelector('[data-tab="spain"]').addEventListener('click',()=>{
+  setTimeout(()=>document.getElementById('spain-loading').style.display='none',100);
 });
 </script>
 
