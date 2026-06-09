@@ -64,6 +64,10 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .modal-body .match-card{border-color:transparent;background:#141720;margin-bottom:.5rem}
 .modal-body .match-card:last-child{margin-bottom:0}
 .modal-body .match-date-sep{font-size:.75rem;font-weight:700;color:#7a7f93;padding:.5rem 0;border-bottom:1px solid #2a2d3a;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.5px}
+.leaflet-popup-content-wrapper{background:#1a1d29!important;color:#e4e6eb!important;border-radius:10px!important;border:1px solid #2a2d3a!important;box-shadow:0 4px 20px rgba(0,0,0,.5)!important}
+.leaflet-popup-tip{background:#1a1d29!important;border:1px solid #2a2d3a!important}
+.leaflet-popup-content{margin:10px 14px!important;font-family:inherit!important}
+.stadium-popup+.leaflet-popup .leaflet-popup-close-button{color:#7a7f93!important;font-size:18px!important}
 @media(max-width:768px){
   header h1{font-size:1.5rem}
   .container{padding:1rem}
@@ -345,14 +349,21 @@ function addMarkers(map){
     if(!coords) return;
     const matches=getStadiumMatches(s.id);
     const matchCount=matches.length;
-    const size=Math.min(24+matchCount,40);
-    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${Math.round(size*1.4)}" viewBox="0 0 24 34">
-      <path d="M12 1C5.9 1 1 5.9 1 12c0 8.3 11 21 11 21s11-12.7 11-21C23 5.9 18.1 1 12 1z" fill="%23f0a500" stroke="%23fff" stroke-width="1.5"/>
-      <circle cx="12" cy="12" r="5" fill="%231a1d29"/>
+    const w=Math.min(26+matchCount*2,44);
+    const h=Math.round(w*1.45);
+    const label=matchCount>9?'9+':matchCount;
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 24 34">
+      <defs>
+        <filter id="s${s.id}" x="-50%" y="-50%" width="200%" height="200%">
+          <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="%23000" flood-opacity=".6"/>
+        </filter>
+      </defs>
+      <path d="M12 1C5.9 1 1 5.9 1 12c0 8.3 11 21 11 21s11-12.7 11-21C23 5.9 18.1 1 12 1z" fill="%23fff" stroke="%23f0a500" stroke-width="2" filter="url(#s${s.id})"/>
+      <circle cx="12" cy="12" r="7" fill="%23f0a500"/>
     </svg>`;
     const iconUrl='data:image/svg+xml,'+encodeURIComponent(svg);
     const m=L.marker(coords,{
-      icon:L.icon({iconUrl,iconSize:[size,Math.round(size*1.4)],iconAnchor:[size/2,Math.round(size*1.4)],popupAnchor:[0,-Math.round(size*1.4)+10]})
+      icon:L.icon({iconUrl,iconSize:[w,h],iconAnchor:[w/2,h],popupAnchor:[0,-h+8]})
     }).addTo(map);
     m.bindPopup(`
       <div style="font-weight:700;font-size:1rem">${s.name_en}</div>
