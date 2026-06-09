@@ -156,24 +156,16 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
   <h1>&#9917; Mundial <span>2026</span></h1>
   <p>Canadá · México · Estados Unidos • 11 Jun – 19 Jul</p>
   <div class="tabs">
-    <button class="tab-btn active" data-tab="groups">Grupos</button>
-    <button class="tab-btn" data-tab="calendar">Calendario</button>
+    <button class="tab-btn active" data-tab="calendar">Calendario</button>
     <button class="tab-btn" data-tab="spain">España</button>
-    <button class="tab-btn" data-tab="history">Historia</button>
+    <button class="tab-btn" data-tab="groups">Grupos</button>
     <button class="tab-btn" data-tab="map">Estadios</button>
+    <button class="tab-btn" data-tab="history">Historia</button>
   </div>
 </header>
 
 <div class="container">
-  <div id="tab-groups" class="tab-content active">
-    <div id="groups-loading" class="loading">
-      <div class="spinner"></div>
-      <p>Cargando grupos…</p>
-    </div>
-    <div id="groups-content" class="groups-grid"></div>
-  </div>
-
-  <div id="tab-calendar" class="tab-content">
+  <div id="tab-calendar" class="tab-content active">
     <div id="calendar-loading" class="loading">
       <div class="spinner"></div>
       <p>Cargando calendario…</p>
@@ -182,12 +174,20 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
     <div id="calendar-content" class="calendar-list"></div>
   </div>
 
-  <div id="tab-history" class="tab-content">
-    <div id="history-loading" class="loading">
+  <div id="tab-spain" class="tab-content">
+    <div id="spain-loading" class="loading">
       <div class="spinner"></div>
-      <p>Cargando historia…</p>
+      <p>Cargando información de España…</p>
     </div>
-    <div id="history-content"></div>
+    <div id="spain-content"></div>
+  </div>
+
+  <div id="tab-groups" class="tab-content">
+    <div id="groups-loading" class="loading">
+      <div class="spinner"></div>
+      <p>Cargando grupos…</p>
+    </div>
+    <div id="groups-content" class="groups-grid"></div>
   </div>
 
   <div id="tab-map" class="tab-content">
@@ -198,12 +198,12 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
     <div id="map-container" style="height:75vh;border-radius:12px;overflow:hidden;border:1px solid #2a2d3a"></div>
   </div>
 
-  <div id="tab-spain" class="tab-content">
-    <div id="spain-loading" class="loading">
+  <div id="tab-history" class="tab-content">
+    <div id="history-loading" class="loading">
       <div class="spinner"></div>
-      <p>Cargando información de España…</p>
+      <p>Cargando historia…</p>
     </div>
-    <div id="spain-content"></div>
+    <div id="history-content"></div>
   </div>
 </div>
 
