@@ -256,6 +256,20 @@ function getStadium(id){
   return state.stadiums.find(s=>String(s.id)===String(id));
 }
 
+const SPAIN_OFFSET = {1:8,2:8,3:8,4:7,5:7,6:7,7:6,8:6,9:6,10:6,11:6,12:6,13:9,14:9,15:9,16:9};
+
+function spainTime(localDateStr, stadiumId){
+  const off = SPAIN_OFFSET[Number(stadiumId)]||0;
+  if(!localDateStr) return {time:'--:--',dayShift:0};
+  const p = localDateStr.split(' ');
+  const t = (p[1]||'00:00').split(':').map(Number);
+  let h = (t[0]||0) + off, m = t[1]||0;
+  let dayShift = 0;
+  while(h>=24){h-=24;dayShift++}
+  while(h<0){h+=24;dayShift--}
+  return {time:String(h).padStart(2,'0')+':'+String(m).padStart(2,'0'), dayShift};
+}
+
 function renderGroups(){
   const el=document.getElementById('groups-content');
   const sorted=[...state.groups].sort((a,b)=>a.name.localeCompare(b.name));
@@ -332,8 +346,10 @@ function renderCalendar(){
 
   const grouped={};
   sorted.forEach(g=>{
-    const dt=new Date(g.local_date);
-    const key=dt.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const st=spainTime(g.local_date,g.stadium_id);
+    const adjDate=new Date(g.local_date);
+    if(st.dayShift) adjDate.setDate(adjDate.getDate()+st.dayShift);
+    const key=adjDate.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
     if(!grouped[key]) grouped[key]=[];
     grouped[key].push(g);
   });
@@ -349,8 +365,8 @@ function renderCalendar(){
       const awayName=g.away_team_name_en||(awayTeam?awayTeam.name_en:'TBD');
       const homeFlag=homeTeam?homeTeam.flag:'';
       const awayFlag=awayTeam?awayTeam.flag:'';
-      const dt=new Date(g.local_date);
-      const timeStr=dt.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',hour12:false});
+      const st=spainTime(g.local_date,g.stadium_id);
+      const timeStr=st.time+'h'+(st.dayShift?' (+1)':'');
       const isFinished=g.finished==='TRUE'||g.finished===true;
       const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
       const stadium=getStadium(g.stadium_id);
@@ -451,7 +467,8 @@ function buildMatchHtml(g){
   const awayId=awayTeam?awayTeam.id:g.away_team_id;
   const dt=new Date(g.local_date);
   const dateStr=dt.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});
-  const timeStr=dt.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',hour12:false});
+  const st=spainTime(g.local_date,g.stadium_id);
+  const timeStr=st.time+'h'+(st.dayShift?' (+1)':'');
   const isFinished=g.finished==='TRUE'||g.finished===true;
   const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
   const stadium=getStadium(g.stadium_id);
@@ -544,9 +561,11 @@ function openTeamModal(team){
       const opponentData=isHome?getTeam(g.away_team_id):getTeam(g.home_team_id);
       const oppFlag=opponentData?opponentData.flag:'';
       const oppId=isHome?g.away_team_id:g.home_team_id;
-      const dt=new Date(g.local_date);
-      const dateStr=dt.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
-      const timeStr=dt.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',hour12:false});
+      const st=spainTime(g.local_date,g.stadium_id);
+      const adjDate=new Date(g.local_date);
+      if(st.dayShift) adjDate.setDate(adjDate.getDate()+st.dayShift);
+      const dateStr=adjDate.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
+      const timeStr=st.time+'h'+(st.dayShift?' (+1)':'');
       const isFinished=g.finished==='TRUE'||g.finished===true;
       const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
       const stadium=getStadium(g.stadium_id);
@@ -723,9 +742,11 @@ function renderSpain(){
           const oppName=isHome?(g.away_team_name_en||''):(g.home_team_name_en||'');
           const oppFlag=opp?opp.flag:'';
           const oppId=isHome?g.away_team_id:g.home_team_id;
-          const dt=new Date(g.local_date);
-          const d=dt.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
-          const t=dt.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',hour12:false});
+          const st=spainTime(g.local_date,g.stadium_id);
+          const adjDate=new Date(g.local_date);
+          if(st.dayShift) adjDate.setDate(adjDate.getDate()+st.dayShift);
+          const d=adjDate.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
+          const t=st.time+'h'+(st.dayShift?' (+1)':'');
           const isF=g.finished==='TRUE'||g.finished===true;
           const isL=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isF;
           const st=getStadium(g.stadium_id);
