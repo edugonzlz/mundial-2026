@@ -342,10 +342,10 @@ function buildMatchHtml(g){
 function initMap(){
   if(state._mapInit) return;
   state._mapInit=true;
-  const map=L.map('map-container',{zoomControl:true,attributionControl:false})
+  const map=L.map('map-container',{zoomControl:false,attributionControl:true})
     .setView([39.5,-100.5],4);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-    maxZoom:18,subdomains:'abcd'
+    maxZoom:18,subdomains:'abcd',attribution:'&copy; <a href="https://carto.com/">CARTO</a>'
   }).addTo(map);
   L.control.zoom({position:'bottomright'}).addTo(map);
 
@@ -354,24 +354,25 @@ function initMap(){
     if(!coords) return;
     const matches=getStadiumMatches(s.id);
     const matchCount=matches.length;
-    const iconSize=Math.min(20+matchCount,36);
-    const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="${iconSize}" height="${iconSize*1.5}">
-      <path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24s12-15 12-24C24 5.4 18.6 0 12 0z" fill="%23f0a500" stroke="%23fff" stroke-width="1.5"/>
+    const size=Math.min(24+matchCount,40);
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${Math.round(size*1.4)}" viewBox="0 0 24 34">
+      <path d="M12 1C5.9 1 1 5.9 1 12c0 8.3 11 21 11 21s11-12.7 11-21C23 5.9 18.1 1 12 1z" fill="%23f0a500" stroke="%23fff" stroke-width="1.5"/>
       <circle cx="12" cy="12" r="5" fill="%231a1d29"/>
     </svg>`;
     const iconUrl='data:image/svg+xml,'+encodeURIComponent(svg);
-    const marker=L.marker(coords,{
-      icon:L.icon({iconUrl,iconSize:[iconSize,iconSize*1.5],iconAnchor:[iconSize/2,iconSize*1.5],popupAnchor:[0,-iconSize*1.5]})
+    const m=L.marker(coords,{
+      icon:L.icon({iconUrl,iconSize:[size,Math.round(size*1.4)],iconAnchor:[size/2,Math.round(size*1.4)],popupAnchor:[0,-Math.round(size*1.4)+10]})
     }).addTo(map);
 
-    const popupContent=`
-      <div style="font-weight:700;font-size:1rem;margin-bottom:2px">${s.name_en}</div>
-      <div style="font-size:.8rem;color:#888;margin-bottom:4px">${s.city_en}, ${s.country_en} &middot; ${s.capacity.toLocaleString()} asientos</div>
-      <div style="font-size:.8rem;color:#f0a500">${matchCount} partidos</div>`;
-
-    marker.bindPopup(popupContent,{className:'stadium-popup',closeButton:false});
-    marker.on('click',()=>openModal(s));
+    m.bindPopup(`
+      <div style="font-weight:700;font-size:1rem">${s.name_en}</div>
+      <div style="font-size:.8rem;color:#888">${s.city_en}, ${s.country_en} &middot; ${s.capacity.toLocaleString()} asientos</div>
+      <div style="font-size:.8rem;color:#f0a500;cursor:pointer;text-decoration:underline" class="modal-trigger">${matchCount} partidos &rarr;</div>`,
+      {className:'stadium-popup',closeButton:false});
+    m.on('click',()=>openModal(s));
   });
+
+  state._map=map;
 }
 
 function openModal(stadium){
@@ -404,11 +405,15 @@ document.getElementById('modal-overlay').addEventListener('click',(e)=>{
 // init map when tab is first shown
 const mapTabBtn=document.querySelector('[data-tab="map"]');
 mapTabBtn.addEventListener('click',()=>{
-  setTimeout(()=>{
-    if(!state._mapInit) initMap();
-    else state._map&&state._map.invalidateSize();
-    document.getElementById('map-loading').style.display='none';
-  },100);
+  const wait=setInterval(()=>{
+    if(!state.stadiums||state.stadiums.length===0) return;
+    clearInterval(wait);
+    setTimeout(()=>{
+      if(!state._mapInit) initMap();
+      else if(state._map) state._map.invalidateSize();
+      document.getElementById('map-loading').style.display='none';
+    },150);
+  },200);
 });
 </script>
 
