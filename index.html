@@ -104,6 +104,31 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .spain-stat{background:#141720;border-radius:10px;padding:.75rem;text-align:center}
 .spain-stat .num{font-size:1.3rem;font-weight:800;color:#f0a500}
 .spain-stat .label{font-size:.65rem;color:#7a7f93;margin-top:2px;text-transform:uppercase}
+/* history tab */
+.history-section{background:#1a1d29;border:1px solid #2a2d3a;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem}
+.history-section h3{font-size:.85rem;font-weight:700;color:#f0a500;margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.5px}
+.ranking-bar{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
+.ranking-bar-item{display:flex;align-items:center;gap:10px}
+.ranking-bar-item .pos{font-size:.75rem;font-weight:700;color:#7a7f93;width:20px;text-align:center;flex-shrink:0}
+.ranking-bar-item img{width:22px;height:15px;border-radius:2px;object-fit:cover;flex-shrink:0}
+.ranking-bar-item .rname{font-size:.8rem;font-weight:600;width:100px;flex-shrink:0}
+.ranking-bar-item .bar-wrap{flex:1;height:22px;background:#141720;border-radius:6px;overflow:hidden}
+.ranking-bar-item .bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.65rem;font-weight:700;color:#fff;min-width:28px;transition:width .3s}
+.timeline{display:flex;flex-direction:column;gap:8px}
+.timeline-item{display:flex;align-items:center;gap:12px;padding:8px 12px;background:#141720;border-radius:10px;transition:all .15s}
+.timeline-item:hover{background:#1a1d29}
+.timeline-item .tyear{font-size:.8rem;font-weight:700;color:#f0a500;width:42px;flex-shrink:0}
+.timeline-item .tflags{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.timeline-item .tflags img{width:26px;height:17px;border-radius:2px;object-fit:cover}
+.timeline-item .tvs{font-size:.65rem;color:#7a7f93;font-weight:600;text-align:center}
+.timeline-item .tscore{font-size:.85rem;font-weight:800;color:#e4e6eb;min-width:44px;text-align:center}
+.timeline-item .thost{font-size:.68rem;color:#7a7f93;margin-left:auto;flex-shrink:0}
+.records-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem}
+.record-card{background:#141720;border-radius:10px;padding:.85rem;text-align:center;border:1px solid transparent;transition:all .15s}
+.record-card:hover{border-color:#f0a50040;transform:translateY(-2px)}
+.record-card .r-icon{font-size:1.5rem;margin-bottom:4px}
+.record-card .r-value{font-size:1.1rem;font-weight:800;color:#f0a500}
+.record-card .r-label{font-size:.65rem;color:#7a7f93;margin-top:2px}
 @media(max-width:768px){
   header h1{font-size:1.5rem}
   header p{font-size:.75rem}
@@ -134,6 +159,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
     <button class="tab-btn active" data-tab="groups">Grupos</button>
     <button class="tab-btn" data-tab="calendar">Calendario</button>
     <button class="tab-btn" data-tab="spain">España</button>
+    <button class="tab-btn" data-tab="history">Historia</button>
     <button class="tab-btn" data-tab="map">Estadios</button>
   </div>
 </header>
@@ -154,6 +180,14 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
     </div>
     <div id="calendar-filter" class="cal-filter"></div>
     <div id="calendar-content" class="calendar-list"></div>
+  </div>
+
+  <div id="tab-history" class="tab-content">
+    <div id="history-loading" class="loading">
+      <div class="spinner"></div>
+      <p>Cargando historia…</p>
+    </div>
+    <div id="history-content"></div>
   </div>
 
   <div id="tab-map" class="tab-content">
@@ -288,7 +322,7 @@ function renderGroupFilters(){
 
 function renderCalendar(){
   const el=document.getElementById('calendar-content');
-  let filtered=[...state.games];
+  let filtered=[...state.games].filter(g=>g.finished!=='TRUE'&&g.finished!==true);
   if(state.calendarGroup){
     filtered=filtered.filter(g=>g.group===state.calendarGroup||
       (g.type!=='group'&&g.home_team_name_en&&g.away_team_name_en));
@@ -369,9 +403,11 @@ async function refresh(){
     renderGroupFilters();
     renderCalendar();
     renderSpain();
+    renderHistory();
     document.getElementById('groups-loading').style.display='none';
     document.getElementById('calendar-loading').style.display='none';
     document.getElementById('spain-loading').style.display='none';
+    document.getElementById('history-loading').style.display='none';
   }catch(e){
     console.error('Error al cargar datos:', e);
   }
@@ -731,6 +767,101 @@ function renderSpain(){
     if(tm) openTeamModal(tm);
   }));
 }
+
+// --- History ---
+const WC_HISTORY = [
+  {y:1930,c:'Uruguay',r:'Argentina',s:'4-2',h:'Uruguay',cf:'uy',rf:'ar'},
+  {y:1934,c:'Italy',r:'Czechoslovakia',s:'2-1',h:'Italy',cf:'it',rf:'cz'},
+  {y:1938,c:'Italy',r:'Hungary',s:'4-2',h:'France',cf:'it',rf:'hu'},
+  {y:1950,c:'Uruguay',r:'Brazil',s:'2-1',h:'Brazil',cf:'uy',rf:'br'},
+  {y:1954,c:'West Germany',r:'Hungary',s:'3-2',h:'Switzerland',cf:'de',rf:'hu'},
+  {y:1958,c:'Brazil',r:'Sweden',s:'5-2',h:'Sweden',cf:'br',rf:'se'},
+  {y:1962,c:'Brazil',r:'Czechoslovakia',s:'3-1',h:'Chile',cf:'br',rf:'cz'},
+  {y:1966,c:'England',r:'West Germany',s:'4-2',h:'England',cf:'gb-eng',rf:'de'},
+  {y:1970,c:'Brazil',r:'Italy',s:'4-1',h:'Mexico',cf:'br',rf:'it'},
+  {y:1974,c:'West Germany',r:'Netherlands',s:'2-1',h:'West Germany',cf:'de',rf:'nl'},
+  {y:1978,c:'Argentina',r:'Netherlands',s:'3-1',h:'Argentina',cf:'ar',rf:'nl'},
+  {y:1982,c:'Italy',r:'West Germany',s:'3-1',h:'Spain',cf:'it',rf:'de'},
+  {y:1986,c:'Argentina',r:'West Germany',s:'3-2',h:'Mexico',cf:'ar',rf:'de'},
+  {y:1990,c:'West Germany',r:'Argentina',s:'1-0',h:'Italy',cf:'de',rf:'ar'},
+  {y:1994,c:'Brazil',r:'Italy',s:'0-0 (3-2p)',h:'USA',cf:'br',rf:'it'},
+  {y:1998,c:'France',r:'Brazil',s:'3-0',h:'France',cf:'fr',rf:'br'},
+  {y:2002,c:'Brazil',r:'Germany',s:'2-0',h:'Korea/Japan',cf:'br',rf:'de'},
+  {y:2006,c:'Italy',r:'France',s:'1-1 (5-3p)',h:'Germany',cf:'it',rf:'fr'},
+  {y:2010,c:'Spain',r:'Netherlands',s:'1-0',h:'South Africa',cf:'es',rf:'nl'},
+  {y:2014,c:'Germany',r:'Argentina',s:'1-0',h:'Brazil',cf:'de',rf:'ar'},
+  {y:2018,c:'France',r:'Croatia',s:'4-2',h:'Russia',cf:'fr',rf:'hr'},
+  {y:2022,c:'Argentina',r:'France',s:'3-3 (4-2p)',h:'Qatar',cf:'ar',rf:'fr'}
+];
+
+const WC_RECORDS = [
+  {icon:'🏆',value:'5',label:'Más títulos (Brasil)'},
+  {icon:'🇧🇷',value:'22',label:'Más participaciones'},
+  {icon:'⚽',value:'16',label:'Goles en un mundial (Mbappé 2022)'},
+  {icon:'🥅',value:'7-1',label:'Mayor goleada semifinal (2014)'},
+  {icon:'🇩🇪',value:'8',label:'Finales (Alemania)'},
+  {icon:'🌍',value:'3',label:'Países anfitriones 2026'}
+];
+
+function renderHistory(){
+  const el=document.getElementById('history-content');
+  const sorted=[...WC_HISTORY].sort((a,b)=>b.y-a.y);
+  const titles={};
+  WC_HISTORY.forEach(m=>{titles[m.c]=(titles[m.c]||0)+1});
+  const rank=Object.entries(titles).sort((a,b)=>b[1]-a[1]);
+  const maxTitles=rank[0][1];
+  const titleColors={Brazil:'#009739',Germany:'#DD0000',Italy:'#008FD7',Argentina:'#75AADB',France:'#002395',Uruguay:'#0038A8',England:'#C8102E',Spain:'#C60B1E'};
+
+  el.innerHTML=`
+    <div class="history-section">
+      <h3>Ranking de t&iacute;tulos</h3>
+      <div class="ranking-bar">
+        ${rank.map(([country,count],i)=>{
+          const pct=Math.max(count/maxTitles*100,15);
+          const color=titleColors[country]||'#f0a500';
+          const code={Uruguay:'uy',England:'gb-eng','West Germany':'de',Germany:'de',Italy:'it',Brazil:'br',Argentina:'ar',France:'fr',Spain:'es'}[country]||country.toLowerCase().slice(0,2);
+          return `<div class="ranking-bar-item">
+            <span class="pos">${i+1}</span>
+            <img src="https://flagcdn.com/w40/${code}.png" alt="" loading="lazy">
+            <span class="rname">${country}</span>
+            <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${color}">${count}</div></div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <div class="history-section">
+      <h3>R&eacute;cords</h3>
+      <div class="records-grid">
+        ${WC_RECORDS.map(r=>`<div class="record-card">
+          <div class="r-icon">${r.icon}</div>
+          <div class="r-value">${r.value}</div>
+          <div class="r-label">${r.label}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="history-section">
+      <h3>Todos los campeones</h3>
+      <div class="timeline">
+        ${sorted.map(m=>{
+          const cFlag=`https://flagcdn.com/w40/${m.cf}.png`;
+          const rFlag=`https://flagcdn.com/w40/${m.rf}.png`;
+          const cColor=titleColors[m.c]||'#f0a500';
+          return `<div class="timeline-item" style="border-left:3px solid ${cColor}">
+            <span class="tyear">${m.y}</span>
+            <div class="tflags"><img src="${cFlag}" alt="" loading="lazy"></div>
+            <div style="font-size:.8rem;font-weight:700;min-width:60px">${m.c}</div>
+            <div class="tscore">${m.s}</div>
+            <div class="tflags"><img src="${rFlag}" alt="" loading="lazy"></div>
+            <div style="font-size:.72rem;color:#7a7f93;min-width:60px">${m.r}</div>
+            <span class="thost">${m.h}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
 document.querySelector('[data-tab="map"]').addEventListener('click',()=>{
   const tryInit=()=>{
     if(!state.stadiums||!state.stadiums.length){setTimeout(tryInit,100);return}
