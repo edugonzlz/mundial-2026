@@ -1,0 +1,29 @@
+name: Update World Cup Data
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download data from API
+        run: |
+          curl -s -o data/teams.json https://worldcup26.ir/get/teams
+          curl -s -o data/groups.json https://worldcup26.ir/get/groups
+          curl -s -o data/games.json https://worldcup26.ir/get/games
+          curl -s -o data/stadiums.json https://worldcup26.ir/get/stadiums
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/
+          if ! git diff --staged --quiet; then
+            git commit -m "Actualizar datos [skip ci]"
+            git push
+          fi

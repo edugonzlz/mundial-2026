@@ -127,7 +127,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
-const API_BASE = 'https://worldcup26.ir';
+const API_BASE = '';
 
 const GROUP_COLORS = {
   A:'#E74C3C',B:'#3498DB',C:'#2ECC71',D:'#F39C12',
@@ -145,10 +145,10 @@ async function fetchJSON(url){
 
 async function loadAll(){
   const [tData,gData,gamesData,sData]=await Promise.all([
-    fetchJSON(API_BASE+'/get/teams'),
-    fetchJSON(API_BASE+'/get/groups'),
-    fetchJSON(API_BASE+'/get/games'),
-    fetchJSON(API_BASE+'/get/stadiums')
+    fetchJSON(API_BASE+'data/teams.json'),
+    fetchJSON(API_BASE+'data/groups.json'),
+    fetchJSON(API_BASE+'data/games.json'),
+    fetchJSON(API_BASE+'data/stadiums.json')
   ]);
   state.teams=tData.teams||tData;
   state.groups=gData.groups||gData;
@@ -267,24 +267,13 @@ function renderCalendar(){
 async function refresh(){
   try{
     await loadAll();
+    renderGroups();
+    renderCalendar();
+    document.getElementById('groups-loading').style.display='none';
+    document.getElementById('calendar-loading').style.display='none';
   }catch(e){
     console.error('Error al cargar datos:', e);
-    const hint = location.protocol === 'file:'
-      ? 'Estás abriendo el archivo directamente (<code>file://</code>).<br>Usa un servidor local o súbelo a Hostinger:'
-      : '';
-    showError(`${hint}<br>No se pudo conectar con la API de datos. <br>Si estás en desarrollo, ejecuta:<br><code style="background:#2a2d3a;padding:6px 12px;border-radius:6px;display:inline-block;margin-top:6px">python3 -m http.server 8080</code><br>y luego abre <a href="http://localhost:8080" style="color:#f0a500">http://localhost:8080</a>`);
-    return;
   }
-  renderGroups();
-  renderCalendar();
-  document.getElementById('groups-loading').style.display='none';
-  document.getElementById('calendar-loading').style.display='none';
-}
-
-function showError(msg){
-  document.querySelectorAll('.loading').forEach(el=>{
-    el.innerHTML=`<div style="color:#e74c3c;font-size:2rem;margin-bottom:.5rem">&#9888;</div><p>${msg}</p>`;
-  });
 }
 
 document.querySelectorAll('.tab-btn').forEach(btn=>{
