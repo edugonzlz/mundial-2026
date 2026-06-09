@@ -749,9 +749,9 @@ function renderSpain(){
           const t=st.time+'h'+(st.dayShift?' (+1)':'');
           const isF=g.finished==='TRUE'||g.finished===true;
           const isL=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isF;
-          const st=getStadium(g.stadium_id);
-          const v=st?st.name_en:'';
-          const c=st?st.city_en:'';
+          const std=getStadium(g.stadium_id);
+          const v=std?std.name_en:'';
+          const c=std?std.city_en:'';
           const typeLabels={group:`Grupo ${g.group}`,r32:'Ronda de 32',r16:'Octavos',qf:'Cuartos',sf:'Semifinal',third:'3er Puesto',final:'Final'};
           const sl=typeLabels[g.type]||g.group||'';
           let sc;
