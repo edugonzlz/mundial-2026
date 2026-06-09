@@ -37,11 +37,22 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .team-cell img{width:22px;height:15px;border-radius:2px;object-fit:cover;box-shadow:0 1px 3px rgba(0,0,0,.4);flex-shrink:0}
 .team-cell:hover .name{color:#f0a500}
 /* calendar filter */
-.cal-filter{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem;justify-content:center}
-.cal-filter button{padding:4px 14px;border-radius:6px;border:1px solid #2a2d3a;background:#1a1d29;color:#7a7f93;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .15s}
-.cal-filter button:hover{border-color:#f0a500;color:#f0a500}
-.cal-filter button.active{background:#f0a500;color:#1a1d29;border-color:#f0a500}
-.rules-box{background:#141720;border:1px solid #2a2d3a;border-radius:10px;padding:.8rem 1rem;margin-bottom:.75rem;font-size:.75rem}
+.cal-filter{display:flex;align-items:center;gap:6px;margin-bottom:.75rem;justify-content:center;flex-wrap:wrap}
+.cal-filter select{background:#1a1d29;color:#e4e6eb;border:1px solid #2a2d3a;border-radius:8px;padding:5px 28px 5px 10px;font-size:.78rem;font-weight:600;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237a7f93'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;outline:none;transition:border .15s}
+.cal-filter select:hover{border-color:#f0a50040}
+.cal-filter select:focus{border-color:#f0a500}
+.cal-toggle{background:#1a1d29;border:1px solid #2a2d3a;border-radius:8px;color:#7a7f93;width:30px;height:30px;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;padding:0;line-height:1}
+.cal-toggle:hover{color:#f0a500;border-color:#f0a50040}
+.rules-box{background:#141720;border:1px solid #2a2d3a;border-radius:10px;padding:.7rem 1rem;margin-bottom:.75rem;font-size:.72rem;display:none}
+.rules-box.show{display:block}
+.rules-title{font-weight:700;color:#f0a500;margin-bottom:.5rem;font-size:.78rem}
+.rules-grid{display:flex;flex-wrap:wrap;gap:4px 16px;margin-bottom:.4rem}
+.rules-item{color:#b0b5c0}
+.rules-num{display:inline-block;background:#f0a50020;color:#f0a500;font-weight:700;padding:1px 8px;border-radius:4px;font-size:.7rem}
+.rules-arrow{color:#7a7f93;font-size:.7rem;margin:0 2px}
+.rules-total{font-weight:700;color:#e4e6eb;padding-top:4px;border-top:1px solid #2a2d3a;width:100%}
+.rules-total strong{color:#f0a500}
+.rules-tiebreak{font-size:.65rem;color:#7a7f93;margin-top:2px}
 .rules-title{font-weight:700;color:#f0a500;margin-bottom:.5rem;font-size:.78rem}
 .rules-grid{display:flex;flex-wrap:wrap;gap:4px 16px;margin-bottom:.4rem}
 .rules-item{color:#b0b5c0}
@@ -55,7 +66,8 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .date-sep{font-size:.75rem;font-weight:700;color:#7a7f93;padding:.6rem .25rem .4rem;margin-top:.5rem;border-bottom:1px solid #2a2d3a;text-transform:uppercase;letter-spacing:.5px}
 .date-sep:first-child{margin-top:0}
 .cal-card{display:flex;flex-direction:column;gap:6px;background:#1a1d29;border:1px solid #2a2d3a;border-radius:12px;padding:.85rem 1rem;margin-top:.6rem;transition:all .15s}
-.cal-card:hover{border-color:#f0a50040}
+.cal-card.today,.b-match.today{border-color:#f0a500!important;box-shadow:0 0 0 1px #f0a500,0 0 12px rgba(240,165,0,.15)}
+.cal-card:hover,.b-match:hover{border-color:#f0a50040}
 .cal-card .cal-city{font-size:.65rem;font-weight:700;color:#f0a500;text-transform:uppercase;letter-spacing:.5px}
 .cal-card .cal-teams{display:flex;align-items:center;justify-content:center;gap:12px}
 .cal-card .cal-team{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:color .15s;flex:1}
@@ -172,6 +184,9 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
   .modal{padding:0}
   .modal-header{padding:.75rem 1rem;font-size:1rem}
   .modal-body{padding:.75rem 1rem}
+  .cal-filter{flex-wrap:nowrap;justify-content:center}
+  .rules-box{display:none}
+  .rules-box.show{display:block}
   .timeline-item{flex-wrap:wrap;gap:4px 6px;padding:8px 10px}
   .timeline-item .tyear{width:70px;font-size:.65rem}
   .timeline-item .tflags img{width:22px;height:14px}
@@ -201,7 +216,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
       <div class="spinner"></div>
       <p>Cargando calendario…</p>
     </div>
-    <div class="rules-box">
+    <div class="rules-box" id="rules-box">
       <div class="rules-title">&#8505; Fase de Grupos · 48 equipos · 12 grupos</div>
       <div class="rules-grid">
         <div class="rules-item"><span class="rules-num">1&ordm; y 2&ordm;</span> de cada grupo <span class="rules-arrow">&rarr;</span> <strong>24</strong></div>
@@ -318,6 +333,14 @@ function spainTime(localDateStr, stadiumId){
   return {time:String(h).padStart(2,'0')+':'+String(m).padStart(2,'0'), dayShift};
 }
 
+function isTodayMatch(g){
+  const st=spainTime(g.local_date,g.stadium_id);
+  const d=new Date(g.local_date);
+  if(st.dayShift) d.setDate(d.getDate()+st.dayShift);
+  const now=new Date();
+  return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()&&d.getDate()===now.getDate();
+}
+
 function renderGroups(){
   const el=document.getElementById('groups-content');
   const sorted=[...state.groups].sort((a,b)=>a.name.localeCompare(b.name));
@@ -370,15 +393,18 @@ function renderGroups(){
 function renderGroupFilters(){
   const el=document.getElementById('calendar-filter');
   const letters='ABCDEFGHIJKL';
-  el.innerHTML='<button class="active" data-g="">Todos</button>'+
-    letters.split('').map(l=>`<button data-g="${l}">Grupo ${l}</button>`).join('');
-  el.querySelectorAll('button').forEach(b=>{
-    b.addEventListener('click',()=>{
-      el.querySelector('.active')?.classList.remove('active');
-      b.classList.add('active');
-      state.calendarGroup=b.dataset.g;
-      renderCalendar();
-    });
+  el.innerHTML=`
+    <select id="cal-group-select">
+      <option value="">Todos los grupos</option>
+      ${letters.split('').map(l=>`<option value="${l}">Grupo ${l}</option>`).join('')}
+    </select>
+    <button class="cal-toggle" id="cal-toggle-btn" title="Reglas de avance">&#8505;</button>`;
+  document.getElementById('cal-group-select').addEventListener('change',function(){
+    state.calendarGroup=this.value;
+    renderCalendar();
+  });
+  document.getElementById('cal-toggle-btn').addEventListener('click',()=>{
+    document.getElementById('rules-box').classList.toggle('show');
   });
 }
 
@@ -809,7 +835,7 @@ function renderSpain(){
           else if(isL) sc=`<span class="cal-score" style="color:#e74c3c">${g.home_score??''}-${g.away_score??''}</span>`;
           else sc=`<span class="cal-score" style="color:#7a7f93;font-size:.75rem">VS</span>`;
           const badge=isF?' <span class="badge-final">Final</span>':(isL?' <span class="badge-live">Live</span>':'');
-          return `<div class="cal-card">
+return `<div class="cal-card${isTodayMatch(g)?' today':''}">
             <div class="cal-city">${c}</div>
             <div class="cal-teams">
               <div class="cal-team" style="color:${isHome?'#f0a500':'#e4e6eb'}">
@@ -970,7 +996,7 @@ function renderBracket(){
     if(st.time!=='--:--') metaParts.push(st.time+'h');
     if(stadium) metaParts.push(stadium.name_en);
 
-    return `<div class="b-match${tbdClass}">
+    return `<div class="b-match${tbdClass}${isTodayMatch(g)?' today':''}">
       <div class="bm-teams">
         <div class="bm-team">${homeFlag?`<img src="${homeFlag}">`:''}<span class="bm-name">${homeName}</span></div>
         ${sc}
