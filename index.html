@@ -143,7 +143,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .timeline{display:flex;flex-direction:column;gap:8px}
 .timeline-item{display:flex;align-items:center;gap:12px;padding:8px 12px;background:#141720;border-radius:10px;transition:all .15s}
 .timeline-item:hover{background:#1a1d29}
-.timeline-item .tyear{font-size:.8rem;font-weight:700;color:#f0a500;width:42px;flex-shrink:0}
+.timeline-item .tyear{font-size:.78rem;font-weight:700;color:#f0a500;width:80px;flex-shrink:0;line-height:1.2}
 .timeline-item .tflags{display:flex;align-items:center;gap:4px;flex-shrink:0}
 .timeline-item .tflags img{width:26px;height:17px;border-radius:2px;object-fit:cover}
 .timeline-item .tvs{font-size:.65rem;color:#7a7f93;font-weight:600;text-align:center}
@@ -174,7 +174,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
   .modal-header{padding:.75rem 1rem;font-size:1rem}
   .modal-body{padding:.75rem 1rem}
   .timeline-item{flex-wrap:wrap;gap:4px 6px;padding:8px 10px}
-  .timeline-item .tyear{width:36px;font-size:.7rem}
+  .timeline-item .tyear{width:70px;font-size:.65rem}
   .timeline-item .tflags img{width:22px;height:14px}
   .timeline-item .tscore{font-size:.75rem;min-width:36px}
   .timeline-item div[style*="min-width"]{min-width:auto!important;font-size:.7rem!important}
@@ -871,9 +871,9 @@ const WC_RECORDS = [
   {icon:'🏆',value:'5',label:'Más títulos (Brasil)'},
   {icon:'🇧🇷',value:'22',label:'Más participaciones'},
   {icon:'⚽',value:'16',label:'Goles en un mundial (Mbappé 2022)'},
-  {icon:'🥅',value:'7-1',label:'Mayor goleada semifinal (2014)'},
-  {icon:'🇩🇪',value:'8',label:'Finales (Alemania)'},
-  {icon:'🌍',value:'3',label:'Países anfitriones 2026'}
+  {icon:'🥅',value:'Alemania 7-1 Brasil',label:'Mayor goleada (semifinal 2014)'},
+  {icon:'🇩🇪',value:'8',label:'Finales disputadas (Alemania)'},
+  {icon:'🌍',value:'Canadá, México, EE.UU.',label:'Países anfitriones 2026'}
 ];
 
 function renderHistory(){
@@ -922,7 +922,7 @@ function renderHistory(){
           const rFlag=`https://flagcdn.com/w40/${m.rf}.png`;
           const cColor=titleColors[m.c]||'#f0a500';
           return `<div class="timeline-item" style="border-left:3px solid ${cColor}">
-            <span class="tyear">${m.y}</span>
+            <span class="tyear">${m.y} ${m.h}</span>
             <div class="tflags"><img src="${cFlag}" alt="" loading="lazy"></div>
             <div style="font-size:.8rem;font-weight:700;min-width:60px">${m.c}</div>
             <div class="tscore">${m.s}</div>
@@ -939,7 +939,7 @@ function renderBracket(){
   const el=document.getElementById('bracket-content');
   const knockouts=state.games.filter(g=>g.type!=='group').sort((a,b)=>{
     const order={r32:1,r16:2,qf:3,sf:4,third:5,final:6};
-    return (order[g.type]||9)-(order[b.type]||9)||a.id-b.id;
+    return (order[a.type]||9)-(order[b.type]||9)||a.id-b.id;
   });
   const roundLabels={r32:'Ronda de 32',r16:'Octavos',qf:'Cuartos',sf:'Semifinales',third:'3er Puesto',final:'FINAL'};
   const roundKeys=['r32','r16','qf','sf','third','final'];
