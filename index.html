@@ -349,21 +349,16 @@ function addMarkers(map){
     if(!coords) return;
     const matches=getStadiumMatches(s.id);
     const matchCount=matches.length;
-    const w=Math.min(26+matchCount*2,44);
-    const h=Math.round(w*1.45);
-    const label=matchCount>9?'9+':matchCount;
-    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 24 34">
-      <defs>
-        <filter id="s${s.id}" x="-50%" y="-50%" width="200%" height="200%">
-          <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="%23000" flood-opacity=".6"/>
-        </filter>
-      </defs>
-      <path d="M12 1C5.9 1 1 5.9 1 12c0 8.3 11 21 11 21s11-12.7 11-21C23 5.9 18.1 1 12 1z" fill="%23fff" stroke="%23f0a500" stroke-width="2" filter="url(#s${s.id})"/>
-      <circle cx="12" cy="12" r="7" fill="%23f0a500"/>
+    const w=Math.min(28+matchCount*2,48);
+    const h=Math.round(w*1.4);
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 30 42">
+      <path d="M15 2C7.8 2 2 7.8 2 15c0 10.5 13 25 13 25s13-14.5 13-25C28 7.8 22.2 2 15 2z" fill="%23f0a500" stroke="%23fff" stroke-width="3"/>
+      <circle cx="15" cy="15" r="8" fill="%23fff"/>
+      <text x="15" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="%231a1d29">${matchCount}</text>
     </svg>`;
     const iconUrl='data:image/svg+xml,'+encodeURIComponent(svg);
     const m=L.marker(coords,{
-      icon:L.icon({iconUrl,iconSize:[w,h],iconAnchor:[w/2,h],popupAnchor:[0,-h+8]})
+      icon:L.icon({iconUrl,iconSize:[w,h],iconAnchor:[w/2,h],popupAnchor:[0,-h+10]})
     }).addTo(map);
     m.bindPopup(`
       <div style="font-weight:700;font-size:1rem">${s.name_en}</div>
