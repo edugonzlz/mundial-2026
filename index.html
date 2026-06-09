@@ -40,20 +40,34 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .cal-filter button{padding:4px 14px;border-radius:6px;border:1px solid #2a2d3a;background:#1a1d29;color:#7a7f93;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .15s}
 .cal-filter button:hover{border-color:#f0a500;color:#f0a500}
 .cal-filter button.active{background:#f0a500;color:#1a1d29;border-color:#f0a500}
-/* calendar cards - cromo format */
-.calendar-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
-.cromo-card{background:linear-gradient(145deg,#1a1d29,#141720);border-radius:14px;border:2px solid #2a2d3a;padding:1rem .75rem .75rem;position:relative;overflow:hidden;transition:all .2s;cursor:default;display:flex;flex-direction:column;align-items:center;gap:6px}
-.cromo-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.4)}
-.cromo-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
-.cromo-stage{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:2px 10px;border-radius:4px;margin-bottom:4px}
-.cromo-teams{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:4px 0}
-.cromo-team{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:color .15s;flex:1}
-.cromo-team:hover{color:#f0a500}
-.cromo-team img{width:40px;height:27px;border-radius:3px;object-fit:cover;box-shadow:0 2px 6px rgba(0,0,0,.5)}
-.cromo-team .cromo-name{font-size:.7rem;font-weight:700;text-align:center;line-height:1.2;max-width:80px}
-.cromo-score{font-size:1rem;font-weight:800;min-width:36px;text-align:center;flex-shrink:0}
-.cromo-info{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:4px;font-size:.6rem;color:#7a7f93;text-align:center}
-.cromo-info span{background:#0f1117;padding:2px 8px;border-radius:4px;white-space:nowrap}
+/* calendar cards - grouped by date */
+.calendar-list{display:flex;flex-direction:column;gap:0}
+.date-sep{font-size:.75rem;font-weight:700;color:#7a7f93;padding:.6rem .25rem .4rem;margin-top:.5rem;border-bottom:1px solid #2a2d3a;text-transform:uppercase;letter-spacing:.5px}
+.date-sep:first-child{margin-top:0}
+.cal-card{display:flex;flex-direction:column;gap:6px;background:#1a1d29;border:1px solid #2a2d3a;border-radius:12px;padding:.85rem 1rem;margin-top:.6rem;transition:all .15s}
+.cal-card:hover{border-color:#f0a50040}
+.cal-card .cal-city{font-size:.65rem;font-weight:700;color:#f0a500;text-transform:uppercase;letter-spacing:.5px}
+.cal-card .cal-teams{display:flex;align-items:center;justify-content:center;gap:12px}
+.cal-card .cal-team{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:color .15s;flex:1}
+.cal-card .cal-team:hover{color:#f0a500}
+.cal-card .cal-team img{width:38px;height:25px;border-radius:3px;object-fit:cover;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.cal-card .cal-team .cal-name{font-size:.72rem;font-weight:700;text-align:center;line-height:1.2;max-width:80px}
+.cal-card .cal-score{font-size:1rem;font-weight:800;min-width:34px;text-align:center;flex-shrink:0}
+.cal-card .cal-bottom{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;font-size:.62rem;color:#7a7f93}
+.cal-card .cal-bottom span{background:#0f1117;padding:2px 8px;border-radius:4px;white-space:nowrap}
+.cal-card .cal-bottom .cal-group{font-weight:700}
+/* stadium modal cards (used by buildMatchHtml) */
+.match-card{display:flex;align-items:center;gap:.75rem;background:#141720;border-radius:10px;padding:.7rem .9rem;margin-bottom:.5rem;border:1px solid transparent}
+.match-card:last-child{margin-bottom:0}
+.match-date{min-width:70px;text-align:center;flex-shrink:0}
+.match-date .day{font-size:.72rem;font-weight:700;color:#e4e6eb;white-space:nowrap}
+.match-date .time{font-size:.62rem;color:#7a7f93;margin-top:1px}
+.match-teams{flex:1;display:flex;align-items:center;justify-content:center;gap:8px}
+.team-inline{display:flex;align-items:center;gap:6px;font-weight:600;font-size:.8rem;cursor:pointer}
+.team-inline:hover{color:#f0a500}
+.team-inline img{width:20px;height:13px;border-radius:2px;object-fit:cover;flex-shrink:0}
+.match-score{font-weight:800;font-size:.95rem;min-width:36px;text-align:center;color:#f0a500}
+.match-vs{color:#7a7f93;font-size:.7rem;font-weight:600}
 .loading{text-align:center;padding:4rem 2rem;color:#7a7f93}
 .loading .spinner{width:40px;height:40px;border:3px solid #2a2d3a;border-top-color:#f0a500;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -93,10 +107,10 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
   header h1{font-size:1.5rem}
   .container{padding:1rem}
   .groups-grid{grid-template-columns:1fr}
-  .calendar-list{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem}
-  .cromo-team img{width:32px;height:22px}
-  .cromo-team .cromo-name{font-size:.65rem;max-width:65px}
-  .cromo-score{font-size:.85rem;min-width:28px}
+  .cal-card{padding:.7rem .8rem}
+  .cal-card .cal-team img{width:30px;height:20px}
+  .cal-card .cal-team .cal-name{font-size:.65rem;max-width:65px}
+  .cal-card .cal-score{font-size:.85rem;min-width:28px}
 }
 </style>
 </head>
@@ -270,55 +284,66 @@ function renderCalendar(){
   const sorted=filtered
     .sort((a,b)=>new Date(a.local_date)-new Date(b.local_date)||a.id-b.id);
 
-  el.innerHTML=sorted.map(g=>{
-    const homeTeam=getTeam(g.home_team_id);
-    const awayTeam=getTeam(g.away_team_id);
-    const homeId=homeTeam?homeTeam.id:g.home_team_id;
-    const awayId=awayTeam?awayTeam.id:g.away_team_id;
-    const homeName=g.home_team_name_en||(homeTeam?homeTeam.name_en:'TBD');
-    const awayName=g.away_team_name_en||(awayTeam?awayTeam.name_en:'TBD');
-    const homeFlag=homeTeam?homeTeam.flag:'';
-    const awayFlag=awayTeam?awayTeam.flag:'';
+  const grouped={};
+  sorted.forEach(g=>{
     const dt=new Date(g.local_date);
-    const dateStr=dt.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});
-    const timeStr=dt.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',hour12:false});
-    const isFinished=g.finished==='TRUE'||g.finished===true;
-    const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
-    const stadium=getStadium(g.stadium_id);
-    const venueStr=stadium?stadium.name_en:'';
-    const grp=g.group||'';
-    const typeLabels={group:`Grupo ${grp}`,r32:'Ronda de 32',r16:'Octavos',qf:'Cuartos',sf:'Semifinal',third:'3er Puesto',final:'Final'};
-    const stageLabel=typeLabels[g.type]||grp;
-    const grpColor=GROUP_COLORS[grp]||'#666';
+    const key=dt.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    if(!grouped[key]) grouped[key]=[];
+    grouped[key].push(g);
+  });
 
-    let scoreHtml;
-    if(isFinished) scoreHtml=`<span class="cromo-score" style="color:#27ae60">${g.home_score??''}-${g.away_score??''}</span>`;
-    else if(isLive) scoreHtml=`<span class="cromo-score" style="color:#e74c3c">${g.home_score??''}-${g.away_score??''}</span>`;
-    else scoreHtml=`<span class="cromo-score" style="color:#7a7f93;font-size:.75rem">VS</span>`;
+  el.innerHTML=Object.entries(grouped).map(([date,games])=>
+    `<div class="date-sep">${date.charAt(0).toUpperCase()+date.slice(1)}</div>`+
+    games.map(g=>{
+      const homeTeam=getTeam(g.home_team_id);
+      const awayTeam=getTeam(g.away_team_id);
+      const homeId=homeTeam?homeTeam.id:g.home_team_id;
+      const awayId=awayTeam?awayTeam.id:g.away_team_id;
+      const homeName=g.home_team_name_en||(homeTeam?homeTeam.name_en:'TBD');
+      const awayName=g.away_team_name_en||(awayTeam?awayTeam.name_en:'TBD');
+      const homeFlag=homeTeam?homeTeam.flag:'';
+      const awayFlag=awayTeam?awayTeam.flag:'';
+      const dt=new Date(g.local_date);
+      const timeStr=dt.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',hour12:false});
+      const isFinished=g.finished==='TRUE'||g.finished===true;
+      const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
+      const stadium=getStadium(g.stadium_id);
+      const grp=g.group||'';
+      const typeLabels={group:`Grupo ${grp}`,r32:'Ronda de 32',r16:'Octavos',qf:'Cuartos',sf:'Semifinal',third:'3er Puesto',final:'Final'};
+      const stageLabel=typeLabels[g.type]||grp;
+      const grpColor=GROUP_COLORS[grp]||'#666';
 
-    const badge=isFinished?' <span class="badge-final">Final</span>':(isLive?' <span class="badge-live">Live</span>':'');
+      let scoreHtml;
+      if(isFinished) scoreHtml=`<span class="cal-score" style="color:#27ae60">${g.home_score??''}-${g.away_score??''}</span>`;
+      else if(isLive) scoreHtml=`<span class="cal-score" style="color:#e74c3c">${g.home_score??''}-${g.away_score??''}</span>`;
+      else scoreHtml=`<span class="cal-score" style="color:#7a7f93;font-size:.75rem">VS</span>`;
+      const badge=isFinished?' <span class="badge-final">Final</span>':(isLive?' <span class="badge-live">Live</span>':'');
 
-    return `<div class="cromo-card" style="border-color:${grpColor}40">
-      <div style="background:${grpColor};position:absolute;top:0;left:0;right:0;height:4px"></div>
-      <div class="cromo-stage" style="background:${grpColor}20;color:${grpColor}">${stageLabel}</div>
-      <div class="cromo-teams">
-        <div class="cromo-team" data-team="${homeId}">
-          ${homeFlag?`<img src="${homeFlag}" alt="" loading="lazy">`:''}
-          <span class="cromo-name">${homeName}</span>
+      const cityStr=stadium?stadium.city_en:'';
+      const venueStr=stadium?stadium.name_en:'';
+
+      return `<div class="cal-card">
+        <div class="cal-city">${cityStr}</div>
+        <div class="cal-teams">
+          <div class="cal-team" data-team="${homeId}">
+            ${homeFlag?`<img src="${homeFlag}" alt="" loading="lazy">`:''}
+            <span class="cal-name">${homeName}</span>
+          </div>
+          ${scoreHtml}${badge}
+          <div class="cal-team" data-team="${awayId}">
+            ${awayFlag?`<img src="${awayFlag}" alt="" loading="lazy">`:''}
+            <span class="cal-name">${awayName}</span>
+          </div>
         </div>
-        ${scoreHtml}${badge}
-        <div class="cromo-team" data-team="${awayId}">
-          ${awayFlag?`<img src="${awayFlag}" alt="" loading="lazy">`:''}
-          <span class="cromo-name">${awayName}</span>
+        <div class="cal-bottom">
+          <span>${timeStr}</span>
+          ${venueStr?`<span>${venueStr}</span>`:''}
+          <span class="cal-group" style="color:${grpColor}">${stageLabel}</span>
         </div>
-      </div>
-      <div class="cromo-info">
-        <span>${dateStr} ${timeStr}</span>
-        ${venueStr?`<span>${venueStr}</span>`:''}
-      </div>
-    </div>`;
-  }).join('');
-  el.querySelectorAll('.cromo-team[data-team]').forEach(c=>c.addEventListener('click',e=>{
+      </div>`;
+    }).join('')
+  ).join('');
+  el.querySelectorAll('.cal-team[data-team]').forEach(c=>c.addEventListener('click',e=>{
     e.stopPropagation();
     const team=getTeam(c.dataset.team);
     if(team) openTeamModal(team);
@@ -381,6 +406,8 @@ function buildMatchHtml(g){
   const timeStr=dt.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',hour12:false});
   const isFinished=g.finished==='TRUE'||g.finished===true;
   const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
+  const stadium=getStadium(g.stadium_id);
+  const venueStr=stadium?`${stadium.name_en}, ${stadium.city_en}`:'';
   let scoreHtml;
   if(isFinished){
     scoreHtml=`<span class="match-score">${g.home_score??''}-${g.away_score??''}</span> <span class="badge-final">Final</span>`;
@@ -393,6 +420,7 @@ function buildMatchHtml(g){
     <div class="match-date">
       <div class="day">${dateStr}</div>
       <div class="time">${timeStr}</div>
+      ${venueStr?`<div style="font-size:.55rem;color:#5a5f73;margin-top:2px">${venueStr}</div>`:''}
     </div>
     <div class="match-teams">
       <div class="team-inline" data-team="${homeId}">${homeFlag?`<img src="${homeFlag}" alt="" loading="lazy">`:''}${homeName}</div>
@@ -452,49 +480,65 @@ function openTeamModal(team){
   const grpColor=GROUP_COLORS[team.groups]||'#666';
   const typeLabels={group:'Fase Grupos',r32:'Ronda de 32',r16:'Octavos',qf:'Cuartos',sf:'Semifinal',third:'3er Puesto',final:'Final'};
 
-  body.innerHTML=teamGames.map(g=>{
-    const isHome=String(g.home_team_id)===String(team.id)||g.home_team_name_en===team.name_en;
-    const opponentName=isHome?(g.away_team_name_en||''):(g.home_team_name_en||'');
-    const opponentData=isHome?getTeam(g.away_team_id):getTeam(g.home_team_id);
-    const oppFlag=opponentData?opponentData.flag:'';
-    const dt=new Date(g.local_date);
-    const dateStr=dt.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
-    const timeStr=dt.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',hour12:false});
-    const isFinished=g.finished==='TRUE'||g.finished===true;
-    const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
-    const stadium=getStadium(g.stadium_id);
-    const venueStr=stadium?`${stadium.name_en}, ${stadium.city_en}`:'';
-    const stageLabel=typeLabels[g.type]||g.group||'';
+  const grouped={};
+  teamGames.forEach(g=>{
+    const lbl=typeLabels[g.type]||g.group||'';
+    if(!grouped[lbl]) grouped[lbl]=[];
+    grouped[lbl].push(g);
+  });
 
-    let scoreHtml;
-    if(isFinished){
-      scoreHtml=`<span class="match-score">${g.home_score??''}-${g.away_score??''}</span> <span class="badge-final">Final</span>`;
-    }else if(isLive){
-      scoreHtml=`<span class="match-score">${g.home_score??''}-${g.away_score??''}</span> <span class="badge-live">Live</span>`;
-    }else{
-      scoreHtml=`<span class="match-vs" style="font-size:.7rem">VS</span>`;
-    }
+  body.innerHTML=Object.entries(grouped).map(([stage,games])=>
+    `<div class="match-date-sep" style="color:${grpColor}">${stage}</div>`+
+    games.map(g=>{
+      const isHome=String(g.home_team_id)===String(team.id)||g.home_team_name_en===team.name_en;
+      const opponentName=isHome?(g.away_team_name_en||''):(g.home_team_name_en||'');
+      const opponentData=isHome?getTeam(g.away_team_id):getTeam(g.home_team_id);
+      const oppFlag=opponentData?opponentData.flag:'';
+      const oppId=isHome?g.away_team_id:g.home_team_id;
+      const dt=new Date(g.local_date);
+      const dateStr=dt.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
+      const timeStr=dt.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',hour12:false});
+      const isFinished=g.finished==='TRUE'||g.finished===true;
+      const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
+      const stadium=getStadium(g.stadium_id);
+      const venueStr=stadium?stadium.name_en:'';
+      const cityStr=stadium?stadium.city_en:'';
 
-    return `<div class="match-card" style="background:#0f1117;border-color:${grpColor}30">
-      <div style="display:flex;flex-direction:column;align-items:center;min-width:80px;flex-shrink:0">
-        <span style="font-size:.6rem;font-weight:700;color:${grpColor};text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">${stageLabel}</span>
-        <div class="match-date">
-          <div class="day">${dateStr}</div>
-          <div class="time">${timeStr}</div>
-          ${venueStr?`<div class="venue-sm">${venueStr}</div>`:''}
+      let scoreHtml;
+      if(isFinished) scoreHtml=`<span style="font-size:1.1rem;font-weight:800;color:#27ae60">${g.home_score??''}-${g.away_score??''}</span> <span class="badge-final">Final</span>`;
+      else if(isLive) scoreHtml=`<span style="font-size:1.1rem;font-weight:800;color:#e74c3c">${g.home_score??''}-${g.away_score??''}</span> <span class="badge-live">Live</span>`;
+      else scoreHtml=`<span style="font-size:.8rem;font-weight:700;color:#7a7f93">VS</span>`;
+
+      return `<div style="background:#141720;border-radius:10px;padding:.8rem 1rem;margin-bottom:.5rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:.65rem;color:#7a7f93">
+          <span>${dateStr}</span>
+          <span>${timeStr}</span>
         </div>
-      </div>
-      <div class="match-teams">
-        <div class="team-inline" style="font-weight:${isHome?800:400};color:${isHome?'#f0a500':'#e4e6eb'}">
-          ${team.flag?`<img src="${team.flag}" alt="" loading="lazy">`:''}${team.name_en}
+        <div style="display:flex;align-items:center;justify-content:center;gap:12px">
+          <div class="tm-team" data-tm="${team.id}" style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;cursor:pointer">
+            ${team.flag?`<img src="${team.flag}" style="width:36px;height:24px;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.4)">`:''}
+            <span style="font-size:.72rem;font-weight:700;text-align:center;color:${isHome?'#f0a500':'#e4e6eb'}">${team.name_en}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">${scoreHtml}</div>
+          <div class="tm-team" data-tm="${oppId}" style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;cursor:pointer">
+            ${oppFlag?`<img src="${oppFlag}" style="width:36px;height:24px;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.4)">`:''}
+            <span style="font-size:.72rem;font-weight:700;text-align:center">${opponentName}</span>
+          </div>
         </div>
-        ${scoreHtml}
-        <div class="team-inline" style="font-weight:${isHome?400:800}">
-          ${oppFlag?`<img src="${oppFlag}" alt="" loading="lazy">`:''}${opponentName}
+        <div style="display:flex;justify-content:center;gap:8px;margin-top:6px;font-size:.6rem;color:#7a7f93">
+          ${venueStr?`<span style="background:#0f1117;padding:2px 8px;border-radius:4px">${venueStr}, ${cityStr}</span>`:''}
         </div>
-      </div>
-    </div>`;
-  }).join('')||'<div style="text-align:center;padding:2rem;color:#7a7f93">No hay partidos disponibles</div>';
+      </div>`;
+    }).join('')
+  ).join('')||'<div style="text-align:center;padding:2rem;color:#7a7f93">No hay partidos disponibles</div>';
+
+  body.querySelectorAll('.tm-team').forEach(el=>{
+    const id=el.dataset.tm;
+    if(id) el.addEventListener('click',()=>{
+      const tm=getTeam(String(id));
+      if(tm) openTeamModal(tm);
+    });
+  });
 
   document.getElementById('modal-overlay').classList.add('open');
 }
@@ -622,7 +666,7 @@ function renderSpain(){
 
     <div class="spain-section">
       <h3>Partidos</h3>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem">
+      <div style="display:flex;flex-direction:column;gap:.5rem">
         ${teamGames.map(g=>{
           const isHome=String(g.home_team_id)===String(team.id);
           const opp=isHome?getTeam(g.away_team_id):getTeam(g.home_team_id);
@@ -630,32 +674,40 @@ function renderSpain(){
           const oppFlag=opp?opp.flag:'';
           const oppId=isHome?g.away_team_id:g.home_team_id;
           const dt=new Date(g.local_date);
-          const d=dt.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});
+          const d=dt.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
           const t=dt.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',hour12:false});
           const isF=g.finished==='TRUE'||g.finished===true;
           const isL=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isF;
           const st=getStadium(g.stadium_id);
           const v=st?st.name_en:'';
+          const c=st?st.city_en:'';
           const typeLabels={group:`Grupo ${g.group}`,r32:'Ronda de 32',r16:'Octavos',qf:'Cuartos',sf:'Semifinal',third:'3er Puesto',final:'Final'};
           const sl=typeLabels[g.type]||g.group||'';
           let sc;
-          if(isF) sc=`<span class="cromo-score" style="color:#27ae60">${g.home_score??''}-${g.away_score??''}</span>`;
-          else if(isL) sc=`<span class="cromo-score" style="color:#e74c3c">${g.home_score??''}-${g.away_score??''}</span>`;
-          else sc=`<span class="cromo-score" style="color:#7a7f93;font-size:.75rem">VS</span>`;
+          if(isF) sc=`<span class="cal-score" style="color:#27ae60">${g.home_score??''}-${g.away_score??''}</span>`;
+          else if(isL) sc=`<span class="cal-score" style="color:#e74c3c">${g.home_score??''}-${g.away_score??''}</span>`;
+          else sc=`<span class="cal-score" style="color:#7a7f93;font-size:.75rem">VS</span>`;
           const badge=isF?' <span class="badge-final">Final</span>':(isL?' <span class="badge-live">Live</span>':'');
-          return `<div class="cromo-card" style="border-color:${grpColor}25">
-            <div style="background:${grpColor};position:absolute;top:0;left:0;right:0;height:4px"></div>
-            <div class="cromo-stage" style="background:${grpColor}15;color:${grpColor}">${sl}</div>
-            <div class="cromo-teams">
-              <div class="cromo-team" style="color:${isHome?grpColor:'#e4e6eb'}">
+          return `<div class="cal-card">
+            <div class="cal-city">${c}</div>
+            <div class="cal-teams">
+              <div class="cal-team" style="color:${isHome?'#f0a500':'#e4e6eb'}">
                 ${team.flag?`<img src="${team.flag}" alt="" loading="lazy">`:''}
-                <span class="cromo-name">${team.name_en}</span>
+                <span class="cal-name">${team.name_en}</span>
               </div>
               ${sc}${badge}
-              <div class="cromo-team" data-team="${oppId}">
+              <div class="cal-team" data-team="${oppId}">
                 ${oppFlag?`<img src="${oppFlag}" alt="" loading="lazy">`:''}
-                <span class="cromo-name">${oppName}</span>
+                <span class="cal-name">${oppName}</span>
               </div>
+            </div>
+            <div class="cal-bottom">
+              <span>${d} ${t}</span>
+              ${v?`<span>${v}</span>`:''}
+              <span class="cal-group" style="color:${grpColor}">${sl}</span>
+            </div>
+          </div>`;
+        }).join('')}
             </div>
             <div class="cromo-info">
               <span>${d} ${t}</span>
