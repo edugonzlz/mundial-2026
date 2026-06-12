@@ -610,6 +610,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
     document.getElementById('mobile-menu').classList.remove('open');
     document.getElementById('hamburger-btn').innerHTML='&#9776;';
+    window.scrollTo({top:0,behavior:'instant'});
   });
 });
 
