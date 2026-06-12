@@ -737,39 +737,41 @@ function openTeamModal(team){
       const oppFlag=opponentData?opponentData.flag:'';
       const oppId=isHome?g.away_team_id:g.home_team_id;
       const st=spainTime(g.local_date,g.stadium_id);
-      const adjDate=new Date(g.local_date);
-      if(st.dayShift) adjDate.setDate(adjDate.getDate()+st.dayShift);
-      const dateStr=adjDate.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
       const timeStr=st.time+'h';
       const isFinished=g.finished==='TRUE'||g.finished===true;
       const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
       const stadium=getStadium(g.stadium_id);
       const venueStr=stadium?stadium.name_en:'';
       const cityStr=stadium?stadium.city_en:'';
+      const adjDate=new Date(g.local_date);
+      if(st.dayShift) adjDate.setDate(adjDate.getDate()+st.dayShift);
+      const dateStr=adjDate.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
+      const typeLabels={group:`Grupo ${g.group}`,r32:'Ronda de 32',r16:'Octavos',qf:'Cuartos',sf:'Semifinal',third:'3er Puesto',final:'Final'};
+      const sl=typeLabels[g.type]||g.group||'';
+      const grpColor=GROUP_COLORS[g.group]||'#666';
 
       let scoreHtml;
-      if(isFinished) scoreHtml=`<span style="font-size:1.1rem;font-weight:800;color:#27ae60">${g.home_score??''}-${g.away_score??''}</span> <span class="badge-final">Final</span>`;
-      else if(isLive) scoreHtml=`<span style="font-size:1.1rem;font-weight:800;color:#e74c3c">${g.home_score??''}-${g.away_score??''}</span> <span class="badge-live">Live</span>`;
-      else scoreHtml=`<span style="font-size:.8rem;font-weight:700;color:#7a7f93">VS</span>`;
+      if(isFinished) scoreHtml=`<span class="cal-score" style="color:#27ae60">${g.home_score??''}-${g.away_score??''}</span> <span class="badge-final">Final</span>`;
+      else if(isLive) scoreHtml=`<span class="cal-score" style="color:#e74c3c">${g.home_score??''}-${g.away_score??''}</span> <span class="badge-live">Live</span>`;
+      else scoreHtml=`<span class="cal-score cal-time">${timeStr}</span>`;
 
-      return `<div style="background:#141720;border-radius:10px;padding:.8rem 1rem;margin-bottom:.5rem">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:.65rem;color:#7a7f93">
+      return `<div class="cal-card${isTodayMatch(g)?' today':''}">
+        <div class="cal-city">${cityStr}</div>
+        <div class="cal-teams">
+          <div class="cal-team tm-team" data-tm="${team.id}">
+            ${team.flag?`<img src="${team.flag}" alt="" loading="lazy">`:''}
+            <span class="cal-name">${team.name_en}</span>
+          </div>
+          ${scoreHtml}
+          <div class="cal-team tm-team" data-tm="${oppId}">
+            ${oppFlag?`<img src="${oppFlag}" alt="" loading="lazy">`:''}
+            <span class="cal-name">${opponentName}</span>
+          </div>
+        </div>
+        <div class="cal-bottom">
           <span>${dateStr}</span>
-          <span>${timeStr}</span>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:12px">
-          <div class="tm-team" data-tm="${team.id}" style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;cursor:pointer">
-            ${team.flag?`<img src="${team.flag}" style="width:36px;height:24px;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.4)">`:''}
-            <span style="font-size:.72rem;font-weight:700;text-align:center;color:${isHome?'#f0a500':'#e4e6eb'}">${team.name_en}</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px">${scoreHtml}</div>
-          <div class="tm-team" data-tm="${oppId}" style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;cursor:pointer">
-            ${oppFlag?`<img src="${oppFlag}" style="width:36px;height:24px;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.4)">`:''}
-            <span style="font-size:.72rem;font-weight:700;text-align:center">${opponentName}</span>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:center;gap:8px;margin-top:6px;font-size:.6rem;color:#7a7f93">
-          ${venueStr?`<span style="background:#0f1117;padding:2px 8px;border-radius:4px">${venueStr}, ${cityStr}</span>`:''}
+          ${venueStr?`<span>${venueStr}</span>`:''}
+          <span class="cal-group" style="color:${grpColor}">${sl}</span>
         </div>
       </div>`;
     }).join('')
