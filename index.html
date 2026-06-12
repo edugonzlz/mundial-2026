@@ -519,7 +519,10 @@ function renderCalendar(){
       const cityStr=stadium?stadium.city_en:'';
       const venueStr=stadium?stadium.name_en:'';
 
-      return `<div class="cal-card">
+      const td=isTodayMatch(g);
+
+      return `<div class="cal-card${td?' today':''}">
+        ${td?'<div style="background:#f0a500;color:#0e1018;font-size:.6rem;font-weight:700;text-align:center;padding:2px 0;border-radius:6px;margin-bottom:4px">HOY</div>':''}
         <div class="cal-city">${cityStr}</div>
         <div class="cal-teams">
           <div class="cal-team" data-team="${homeId}">
