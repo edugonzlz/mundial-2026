@@ -77,15 +77,15 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .cal-card{display:flex;flex-direction:column;gap:7px;background:#1a1d29;border:1px solid #2a2d3a;border-radius:12px;padding:1rem 1.15rem;margin-top:.6rem;transition:all .15s}
 .cal-card.today,.b-match.today{border-color:#f0a500!important;box-shadow:0 0 0 1px #f0a500,0 0 12px rgba(240,165,0,.15)}
 .cal-card:hover,.b-match:hover{border-color:#f0a50040}
-.cal-card .cal-city{font-size:.65rem;font-weight:700;color:#f0a500;text-transform:uppercase;letter-spacing:.5px}
+.cal-card .cal-city{font-size:.6rem;font-weight:600;color:#7a7f93;text-transform:uppercase;letter-spacing:.5px}
 .cal-card .cal-teams{display:flex;align-items:center;justify-content:center;gap:12px}
-.cal-card .cal-team{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:color .15s;flex:1}
+.cal-card .cal-team{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:color .15s;flex:1}
 .cal-card .cal-team:hover{color:#f0a500}
-.cal-card .cal-team img{width:44px;height:29px;border-radius:4px;object-fit:cover;box-shadow:0 2px 6px rgba(0,0,0,.4)}
-.cal-card .cal-team .cal-name{font-size:.78rem;font-weight:700;text-align:center;line-height:1.2;max-width:90px}
+.cal-card .cal-team img{width:48px;height:32px;border-radius:4px;object-fit:cover;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.cal-card .cal-team .cal-name{font-size:.9rem;font-weight:800;text-align:center;line-height:1.2;max-width:100px}
 .cal-card .cal-score{font-size:1rem;font-weight:800;min-width:34px;text-align:center;flex-shrink:0}
 .cal-card .cal-score.cal-time{font-size:1.15rem;color:#f0a500}
-.cal-card .cal-bottom{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;font-size:.62rem;color:#7a7f93}
+.cal-card .cal-bottom{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;font-size:.65rem;color:#7a7f93}
 .cal-card .cal-bottom span{background:#0f1117;padding:2px 8px;border-radius:4px;white-space:nowrap}
 .cal-card .cal-bottom .cal-group{font-weight:700}
 /* stadium modal cards (used by buildMatchHtml) */
@@ -187,12 +187,9 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 @media(max-width:768px){
   .hamburger{display:block}
   #tabs-bar{display:none}
-  .mobile-menu{display:none;flex-direction:column;background:#1a1d29;border:1px solid #2a2d3a;border-radius:12px;margin-top:.75rem;overflow:hidden}
+  .mobile-menu{display:none;position:fixed;top:0;left:0;width:100%;height:100vh;z-index:1000;flex-direction:column;justify-content:center;align-items:center;gap:0;background:rgba(15,17,23,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
   .mobile-menu.open{display:flex}
-  .mobile-menu .tab-btn{width:100%;text-align:left;padding:.65rem 1rem;font-size:.9rem;border:none;border-bottom:1px solid #2a2d3a;color:#7a7f93;background:transparent;font-weight:600;cursor:pointer;transition:color .15s}
-  .mobile-menu .tab-btn:last-child{border-bottom:none}
-  .mobile-menu .tab-btn:hover{color:#e4e6eb}
-  .mobile-menu .tab-btn.active{color:#f0a500;background:#141720}
+  .mobile-menu .tab-btn{width:auto;text-align:center;padding:1rem 2rem;font-size:1.3rem;border:none;color:#7a7f93;background:transparent;font-weight:700;cursor:pointer;transition:color .15s}
   header h1{font-size:1.5rem}
   header p{font-size:.75rem}
   header{padding:1rem 1rem}
@@ -204,8 +201,8 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
   .group-standings th:first-child,.group-standings td:first-child{padding-left:.5rem}
   .team-cell img{width:22px;height:15px}
   .cal-card{padding:.8rem .9rem}
-  .cal-card .cal-team img{width:36px;height:24px}
-  .cal-card .cal-team .cal-name{font-size:.7rem;max-width:70px}
+  .cal-card .cal-team img{width:40px;height:26px}
+  .cal-card .cal-team .cal-name{font-size:.8rem;max-width:80px}
   .cal-card .cal-score{font-size:.9rem;min-width:30px}
   .cal-card .cal-score.cal-time{font-size:1rem}
   .modal{padding:0}
@@ -589,8 +586,10 @@ function showError(){
 
 if(location.protocol==='file:') showError();
 
-document.getElementById('hamburger-btn').addEventListener('click',()=>{
-  document.getElementById('mobile-menu').classList.toggle('open');
+document.getElementById('hamburger-btn').addEventListener('click',function(){
+  const m=document.getElementById('mobile-menu');
+  m.classList.toggle('open');
+  this.innerHTML=m.classList.contains('open')?'&#10005;':'&#9776;';
 });
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
@@ -599,6 +598,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     btn.classList.add('active');
     document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
     document.getElementById('mobile-menu').classList.remove('open');
+    document.getElementById('hamburger-btn').innerHTML='&#9776;';
   });
 });
 
