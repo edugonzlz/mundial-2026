@@ -12,6 +12,9 @@ header{background:linear-gradient(135deg,#1a1d29,#0f1117);border-bottom:2px soli
 header h1{font-size:2rem;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#f7c948,#f0a500);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 header h1 span{font-weight:300;-webkit-text-fill-color:#e4e6eb}
 header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
+.header-top{display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin:0 auto;width:100%}
+.hamburger{display:none;background:none;border:none;color:#e4e6eb;font-size:1.5rem;cursor:pointer;padding:0;line-height:1;flex-shrink:0}
+.mobile-menu{display:none}
 .tabs{display:flex;justify-content:center;margin-top:1rem;border-bottom:1px solid #2a2d3a;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab-btn{background:transparent;border:none;color:#7a7f93;padding:.75rem 1.5rem;font-size:.9rem;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;flex-shrink:0}
@@ -25,7 +28,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .group-card:hover{transform:translateY(-2px)}
 .group-card .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .group-header{padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:1.1rem;letter-spacing:1px}
-.group-standings{width:100%;border-collapse:collapse;font-size:.82rem}
+.group-standings{width:100%;border-collapse:collapse;font-size:.88rem}
 .group-standings th{padding:.5rem .4rem;text-align:center;font-size:.7rem;text-transform:uppercase;color:#7a7f93;font-weight:600;border-bottom:1px solid #2a2d3a;background:#141720}
 .group-standings th:first-child{text-align:left;padding-left:.75rem}
 .group-standings td{padding:.5rem .4rem;text-align:center;border-bottom:1px solid #2a2d3a;white-space:nowrap}
@@ -34,7 +37,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .rank-num{display:inline-block;width:18px;text-align:center;font-weight:700;font-size:.75rem;color:#7a7f93}
 .team-cell{cursor:pointer;display:flex;align-items:center;gap:8px}
 .team-cell .name{font-weight:600}
-.team-cell img{width:22px;height:15px;border-radius:2px;object-fit:cover;box-shadow:0 1px 3px rgba(0,0,0,.4);flex-shrink:0}
+.team-cell img{width:26px;height:17px;border-radius:2px;object-fit:cover;box-shadow:0 1px 3px rgba(0,0,0,.4);flex-shrink:0}
 .team-cell:hover .name{color:#f0a500}
 /* calendar filter */
 .cal-filter{display:flex;align-items:center;gap:6px;margin-bottom:.75rem;justify-content:center;flex-wrap:wrap}
@@ -68,19 +71,20 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .rules-tiebreak{font-size:.65rem;color:#7a7f93;margin-top:2px}
 /* calendar cards - grouped by date */
 .calendar-list{display:flex;flex-direction:column;gap:0}
-.date-sep{font-size:.75rem;font-weight:700;color:#7a7f93;padding:.6rem .25rem .4rem;margin-top:.5rem;border-bottom:1px solid #2a2d3a;text-transform:uppercase;letter-spacing:.5px}
+.date-sep{font-size:.82rem;font-weight:700;color:#7a7f93;padding:.6rem .25rem .4rem;margin-top:.5rem;border-bottom:1px solid #2a2d3a;text-transform:uppercase;letter-spacing:.5px}
 .date-sep:first-child{margin-top:0}
 .today-badge{display:inline-block;background:#f0a500;color:#0e1018;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:6px;vertical-align:middle}
-.cal-card{display:flex;flex-direction:column;gap:6px;background:#1a1d29;border:1px solid #2a2d3a;border-radius:12px;padding:.85rem 1rem;margin-top:.6rem;transition:all .15s}
+.cal-card{display:flex;flex-direction:column;gap:7px;background:#1a1d29;border:1px solid #2a2d3a;border-radius:12px;padding:1rem 1.15rem;margin-top:.6rem;transition:all .15s}
 .cal-card.today,.b-match.today{border-color:#f0a500!important;box-shadow:0 0 0 1px #f0a500,0 0 12px rgba(240,165,0,.15)}
 .cal-card:hover,.b-match:hover{border-color:#f0a50040}
 .cal-card .cal-city{font-size:.65rem;font-weight:700;color:#f0a500;text-transform:uppercase;letter-spacing:.5px}
 .cal-card .cal-teams{display:flex;align-items:center;justify-content:center;gap:12px}
 .cal-card .cal-team{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:color .15s;flex:1}
 .cal-card .cal-team:hover{color:#f0a500}
-.cal-card .cal-team img{width:38px;height:25px;border-radius:3px;object-fit:cover;box-shadow:0 2px 6px rgba(0,0,0,.4)}
-.cal-card .cal-team .cal-name{font-size:.72rem;font-weight:700;text-align:center;line-height:1.2;max-width:80px}
+.cal-card .cal-team img{width:44px;height:29px;border-radius:4px;object-fit:cover;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.cal-card .cal-team .cal-name{font-size:.78rem;font-weight:700;text-align:center;line-height:1.2;max-width:90px}
 .cal-card .cal-score{font-size:1rem;font-weight:800;min-width:34px;text-align:center;flex-shrink:0}
+.cal-card .cal-score.cal-time{font-size:1.15rem;color:#f0a500}
 .cal-card .cal-bottom{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;font-size:.62rem;color:#7a7f93}
 .cal-card .cal-bottom span{background:#0f1117;padding:2px 8px;border-radius:4px;white-space:nowrap}
 .cal-card .cal-bottom .cal-group{font-weight:700}
@@ -91,9 +95,9 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .match-date .day{font-size:.72rem;font-weight:700;color:#e4e6eb;white-space:nowrap}
 .match-date .time{font-size:.62rem;color:#7a7f93;margin-top:1px}
 .match-teams{flex:1;display:flex;align-items:center;justify-content:center;gap:8px}
-.team-inline{display:flex;align-items:center;gap:6px;font-weight:600;font-size:.8rem;cursor:pointer}
+.team-inline{display:flex;align-items:center;gap:6px;font-weight:600;font-size:.85rem;cursor:pointer}
 .team-inline:hover{color:#f0a500}
-.team-inline img{width:20px;height:13px;border-radius:2px;object-fit:cover;flex-shrink:0}
+.team-inline img{width:24px;height:16px;border-radius:2px;object-fit:cover;flex-shrink:0}
 .match-score{font-weight:800;font-size:.95rem;min-width:36px;text-align:center;color:#f0a500}
 .match-vs{color:#7a7f93;font-size:.7rem;font-weight:600}
 .loading{text-align:center;padding:4rem 2rem;color:#7a7f93}
@@ -139,7 +143,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .spain-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.75rem}
 .spain-stat{background:#141720;border-radius:10px;padding:.75rem;text-align:center}
 .spain-stat .num{font-size:1.3rem;font-weight:800;color:#f0a500}
-.spain-stat .label{font-size:.65rem;color:#7a7f93;margin-top:2px;text-transform:uppercase}
+.spain-stat .label{font-size:.72rem;color:#7a7f93;margin-top:2px;text-transform:uppercase}
 /* bracket */
 .bracket-wrap{overflow-x:auto;padding-bottom:.5rem;-webkit-overflow-scrolling:touch}
 .bracket{display:flex;gap:0;min-width:950px}
@@ -149,8 +153,8 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .b-match:hover{border-color:#f0a50040;transform:scale(1.02)}
 .b-match .bm-teams{display:flex;flex-direction:column;align-items:center;gap:3px}
 .b-match .bm-team{display:flex;align-items:center;gap:4px;font-weight:600;font-size:.68rem;justify-content:center;width:100%}
-.b-match .bm-team img{width:18px;height:12px;border-radius:1px;object-fit:cover;flex-shrink:0}
-.b-match .bm-team .bm-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px}
+.b-match .bm-team img{width:22px;height:15px;border-radius:2px;object-fit:cover;flex-shrink:0}
+.b-match .bm-team .bm-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}
 .b-match .bm-score{font-weight:800;font-size:.75rem;color:#f0a500;text-align:center;min-width:24px;flex-shrink:0}
 .b-match .bm-vs{font-size:.6rem;color:#7a7f93;font-weight:600;text-align:center}
 .b-match .bm-meta{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:4px;font-size:.55rem;color:#5a5f73}
@@ -163,13 +167,13 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .ranking-bar-item{display:flex;align-items:center;gap:10px}
 .ranking-bar-item .pos{font-size:.75rem;font-weight:700;color:#7a7f93;width:20px;text-align:center;flex-shrink:0}
 .ranking-bar-item img{width:22px;height:15px;border-radius:2px;object-fit:cover;flex-shrink:0}
-.ranking-bar-item .rname{font-size:.8rem;font-weight:600;width:100px;flex-shrink:0}
+.ranking-bar-item .rname{font-size:.85rem;font-weight:600;width:100px;flex-shrink:0}
 .ranking-bar-item .bar-wrap{flex:1;height:22px;background:#141720;border-radius:6px;overflow:hidden}
 .ranking-bar-item .bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:.65rem;font-weight:700;color:#fff;min-width:28px;transition:width .3s}
 .timeline{display:flex;flex-direction:column;gap:8px}
 .timeline-item{display:flex;align-items:center;gap:12px;padding:8px 12px;background:#141720;border-radius:10px;transition:all .15s}
 .timeline-item:hover{background:#1a1d29}
-.timeline-item .tyear{font-size:.78rem;font-weight:700;color:#f0a500;width:80px;flex-shrink:0;line-height:1.2}
+.timeline-item .tyear{font-size:.82rem;font-weight:700;color:#f0a500;width:80px;flex-shrink:0;line-height:1.2}
 .timeline-item .tflags{display:flex;align-items:center;gap:4px;flex-shrink:0}
 .timeline-item .tflags img{width:26px;height:17px;border-radius:2px;object-fit:cover}
 .timeline-item .tvs{font-size:.65rem;color:#7a7f93;font-weight:600;text-align:center}
@@ -178,9 +182,17 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .record-card{background:#141720;border-radius:10px;padding:.85rem;text-align:center;border:1px solid transparent;transition:all .15s}
 .record-card:hover{border-color:#f0a50040;transform:translateY(-2px)}
 .record-card .r-icon{font-size:1.5rem;margin-bottom:4px}
-.record-card .r-value{font-size:1.1rem;font-weight:800;color:#f0a500}
+.record-card .r-value{font-size:1.2rem;font-weight:800;color:#f0a500}
 .record-card .r-label{font-size:.65rem;color:#7a7f93;margin-top:2px}
 @media(max-width:768px){
+  .hamburger{display:block}
+  #tabs-bar{display:none}
+  .mobile-menu{display:none;flex-direction:column;background:#1a1d29;border:1px solid #2a2d3a;border-radius:12px;margin-top:.75rem;overflow:hidden}
+  .mobile-menu.open{display:flex}
+  .mobile-menu .tab-btn{width:100%;text-align:left;padding:.65rem 1rem;font-size:.9rem;border:none;border-bottom:1px solid #2a2d3a;color:#7a7f93;background:transparent;font-weight:600;cursor:pointer;transition:color .15s}
+  .mobile-menu .tab-btn:last-child{border-bottom:none}
+  .mobile-menu .tab-btn:hover{color:#e4e6eb}
+  .mobile-menu .tab-btn.active{color:#f0a500;background:#141720}
   header h1{font-size:1.5rem}
   header p{font-size:.75rem}
   header{padding:1rem 1rem}
@@ -190,11 +202,12 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
   .group-standings{font-size:.72rem}
   .group-standings th,.group-standings td{padding:.35rem .25rem}
   .group-standings th:first-child,.group-standings td:first-child{padding-left:.5rem}
-  .team-cell img{width:18px;height:12px}
-  .cal-card{padding:.7rem .8rem}
-  .cal-card .cal-team img{width:30px;height:20px}
-  .cal-card .cal-team .cal-name{font-size:.65rem;max-width:65px}
-  .cal-card .cal-score{font-size:.85rem;min-width:28px}
+  .team-cell img{width:22px;height:15px}
+  .cal-card{padding:.8rem .9rem}
+  .cal-card .cal-team img{width:36px;height:24px}
+  .cal-card .cal-team .cal-name{font-size:.7rem;max-width:70px}
+  .cal-card .cal-score{font-size:.9rem;min-width:30px}
+  .cal-card .cal-score.cal-time{font-size:1rem}
   .modal{padding:0}
   .modal-header{padding:.75rem 1rem;font-size:1rem}
   .modal-body{padding:.75rem 1rem}
@@ -212,9 +225,20 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 <body>
 
 <header>
-  <h1>&#9917; Mundial <span>2026</span></h1>
+  <div class="header-top">
+    <h1>&#9917; Mundial <span>2026</span></h1>
+    <button class="hamburger" id="hamburger-btn" aria-label="Menú">&#9776;</button>
+  </div>
   <p>Canadá · México · Estados Unidos • 11 Jun – 19 Jul</p>
-  <div class="tabs">
+  <div class="tabs" id="tabs-bar">
+    <button class="tab-btn active" data-tab="calendar">Calendario</button>
+    <button class="tab-btn" data-tab="bracket">Eliminatorias</button>
+    <button class="tab-btn" data-tab="spain">España</button>
+    <button class="tab-btn" data-tab="groups">Grupos</button>
+    <button class="tab-btn" data-tab="map">Estadios</button>
+    <button class="tab-btn" data-tab="history">Historia</button>
+  </div>
+  <div id="mobile-menu" class="mobile-menu">
     <button class="tab-btn active" data-tab="calendar">Calendario</button>
     <button class="tab-btn" data-tab="bracket">Eliminatorias</button>
     <button class="tab-btn" data-tab="spain">España</button>
@@ -371,20 +395,9 @@ function isTodayMatch(g){
   if(st.dayShift) d.setDate(d.getDate()+st.dayShift);
   const m=new Date(d.getTime()+2*3600000);
   const n=new Date(Date.now()+2*3600000);
-  const r=m.getUTCFullYear()===n.getUTCFullYear()&&
+  return m.getUTCFullYear()===n.getUTCFullYear()&&
           m.getUTCMonth()===n.getUTCMonth()&&
           m.getUTCDate()===n.getUTCDate();
-  if(r || g.local_date?.startsWith('06/12')){
-    console.log('isTodayMatch debug:', {
-      match: g.home_team_name_en+' vs '+g.away_team_name_en,
-      local_date: g.local_date,
-      dayShift: st.dayShift,
-      mDate: m.getUTCDate(),
-      nDate: n.getUTCDate(),
-      result: r
-    });
-  }
-  return r;
 }
 
 function renderGroups(){
@@ -446,8 +459,8 @@ function renderGroupFilters(){
     </select>
     <button class="cal-toggle" id="cal-toggle-btn" title="Reglas de avance">&#8505;</button>
     <div class="cal-toggle-group" id="cal-toggle-group">
-      <button class="active" data-filter="upcoming">Pr&oacute;ximos</button>
       <button data-filter="past">Pasados</button>
+      <button class="active" data-filter="upcoming">Pr&oacute;ximos</button>
     </div>`;
   document.getElementById('cal-group-select').addEventListener('change',function(){
     state.calendarGroup=this.value;
@@ -515,7 +528,7 @@ function renderCalendar(){
       let scoreHtml;
       if(isFinished) scoreHtml=`<span class="cal-score" style="color:#27ae60">${g.home_score??''}-${g.away_score??''}</span>`;
       else if(isLive) scoreHtml=`<span class="cal-score" style="color:#e74c3c">${g.home_score??''}-${g.away_score??''}</span>`;
-      else scoreHtml=`<span class="cal-score" style="color:#7a7f93;font-size:.75rem">VS</span>`;
+      else scoreHtml=`<span class="cal-score cal-time">${timeStr}</span>`;
       const badge=isFinished?' <span class="badge-final">Final</span>':(isLive?' <span class="badge-live">Live</span>':'');
 
       const cityStr=stadium?stadium.city_en:'';
@@ -535,7 +548,6 @@ function renderCalendar(){
           </div>
         </div>
         <div class="cal-bottom">
-          <span>${timeStr}</span>
           ${venueStr?`<span>${venueStr}</span>`:''}
           <span class="cal-group" style="color:${grpColor}">${stageLabel}</span>
         </div>
@@ -577,12 +589,16 @@ function showError(){
 
 if(location.protocol==='file:') showError();
 
+document.getElementById('hamburger-btn').addEventListener('click',()=>{
+  document.getElementById('mobile-menu').classList.toggle('open');
+});
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    document.getElementById('mobile-menu').classList.remove('open');
   });
 });
 
