@@ -370,9 +370,19 @@ function isTodayMatch(g){
   if(st.dayShift) d.setDate(d.getDate()+st.dayShift);
   const m=new Date(d.getTime()+2*3600000);
   const n=new Date(Date.now()+2*3600000);
-  return m.getUTCFullYear()===n.getUTCFullYear()&&
-         m.getUTCMonth()===n.getUTCMonth()&&
-         m.getUTCDate()===n.getUTCDate();
+  const r=m.getUTCFullYear()===n.getUTCFullYear()&&
+          m.getUTCMonth()===n.getUTCMonth()&&
+          m.getUTCDate()===n.getUTCDate();
+  console.log('isTodayMatch debug:', {
+    match: g.home_team_name_en+' vs '+g.away_team_name_en,
+    local_date: g.local_date,
+    dayShift: st.dayShift,
+    matchUTC: d.toISOString(),
+    mUTC: m.toISOString()+' (UTC date='+m.getUTCDate()+')',
+    nUTC: n.toISOString()+' (UTC date='+n.getUTCDate()+')',
+    result: r
+  });
+  return r;
 }
 
 function renderGroups(){
