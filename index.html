@@ -113,8 +113,8 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .modal-close{background:none;border:none;color:#7a7f93;font-size:1.5rem;cursor:pointer;padding:0;line-height:1}
 .modal-close:hover{color:#e4e6eb}
 .modal-body{overflow-y:auto;padding:1rem 1.25rem}
-.modal-body .match-card{border-color:transparent;background:#141720;margin-bottom:.5rem}
-.modal-body .match-card:last-child{margin-bottom:0}
+.modal-body .cal-card{border-color:transparent;background:#141720}
+.modal-body .cal-card:last-child{margin-bottom:0}
 .modal-body .match-date-sep{font-size:.75rem;font-weight:700;color:#7a7f93;padding:.5rem 0;border-bottom:1px solid #2a2d3a;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.5px}
 .leaflet-popup-content-wrapper{background:#1a1d29!important;color:#e4e6eb!important;border-radius:10px!important;border:1px solid #2a2d3a!important;box-shadow:0 4px 20px rgba(0,0,0,.5)!important}
 .leaflet-popup-tip{background:#1a1d29!important;border:1px solid #2a2d3a!important}
@@ -149,14 +149,14 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .bracket{display:flex;gap:0;min-width:950px}
 .bracket-col{display:flex;flex-direction:column;justify-content:space-around;flex:1;position:relative;padding:0 6px}
 .bracket-col h4{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#f0a500;text-align:center;padding:.4rem 0;margin-bottom:4px;border-bottom:1px solid #2a2d3a;flex-shrink:0}
-.b-match{background:#1a1d29;border:1px solid #2a2d3a;border-radius:8px;padding:.45rem .6rem;margin:3px 0;font-size:.65rem;transition:all .15s;flex-shrink:0}
+.b-match{background:#1a1d29;border:1px solid #2a2d3a;border-radius:8px;padding:.45rem .6rem;margin:3px 0;font-size:.7rem;transition:all .15s;flex-shrink:0}
 .b-match:hover{border-color:#f0a50040;transform:scale(1.02)}
 .b-match .bm-teams{display:flex;flex-direction:column;align-items:center;gap:3px}
-.b-match .bm-team{display:flex;align-items:center;gap:4px;font-weight:600;font-size:.68rem;justify-content:center;width:100%}
-.b-match .bm-team img{width:22px;height:15px;border-radius:2px;object-fit:cover;flex-shrink:0}
-.b-match .bm-team .bm-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}
-.b-match .bm-score{font-weight:800;font-size:.75rem;color:#f0a500;text-align:center;min-width:24px;flex-shrink:0}
-.b-match .bm-vs{font-size:.6rem;color:#7a7f93;font-weight:600;text-align:center}
+.b-match .bm-team{display:flex;align-items:center;gap:4px;font-weight:600;font-size:.72rem;justify-content:center;width:100%}
+.b-match .bm-team img{width:24px;height:16px;border-radius:2px;object-fit:cover;flex-shrink:0}
+.b-match .bm-team .bm-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:130px}
+.b-match .bm-score{font-weight:800;font-size:.8rem;color:#f0a500;text-align:center;min-width:24px;flex-shrink:0}
+.b-match .bm-vs{font-size:.65rem;color:#7a7f93;font-weight:600;text-align:center}
 .b-match .bm-meta{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:4px;font-size:.55rem;color:#5a5f73}
 .b-match.bm-tbd .bm-team{color:#7a7f93;font-weight:400;font-size:.62rem}
 .b-match.bm-tbd .bm-team .bm-name{max-width:70px;font-style:italic}
@@ -175,7 +175,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .timeline-item:hover{background:#1a1d29}
 .timeline-item .tyear{font-size:.82rem;font-weight:700;color:#f0a500;width:80px;flex-shrink:0;line-height:1.2}
 .timeline-item .tflags{display:flex;align-items:center;gap:4px;flex-shrink:0}
-.timeline-item .tflags img{width:26px;height:17px;border-radius:2px;object-fit:cover}
+.timeline-item .tflags img{width:28px;height:18px;border-radius:2px;object-fit:cover}
 .timeline-item .tvs{font-size:.65rem;color:#7a7f93;font-weight:600;text-align:center}
 .timeline-item .tscore{font-size:.85rem;font-weight:800;color:#e4e6eb;min-width:44px;text-align:center}
 .records-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem}
@@ -216,7 +216,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
   .rules-box.show{display:block}
   .timeline-item{flex-wrap:wrap;gap:4px 6px;padding:8px 10px}
   .timeline-item .tyear{width:70px;font-size:.65rem}
-  .timeline-item .tflags img{width:22px;height:14px}
+  .timeline-item .tflags img{width:24px;height:15px}
   .timeline-item .tscore{font-size:.75rem;min-width:36px}
   .timeline-item div[style*="min-width"]{min-width:auto!important;font-size:.7rem!important}
 }
@@ -516,7 +516,7 @@ function renderCalendar(){
       const homeFlag=homeTeam?homeTeam.flag:'';
       const awayFlag=awayTeam?awayTeam.flag:'';
       const st=spainTime(g.local_date,g.stadium_id);
-      const timeStr=st.time+'h'+(st.dayShift?' (+1)':'');
+      const timeStr=st.time+'h';
       const isFinished=g.finished==='TRUE'||g.finished===true;
       const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
       const stadium=getStadium(g.stadium_id);
@@ -629,32 +629,43 @@ function buildMatchHtml(g){
   const awayFlag=awayTeam?awayTeam.flag:'';
   const homeId=homeTeam?homeTeam.id:g.home_team_id;
   const awayId=awayTeam?awayTeam.id:g.away_team_id;
-  const dt=new Date(g.local_date);
-  const dateStr=dt.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});
   const st=spainTime(g.local_date,g.stadium_id);
-  const timeStr=st.time+'h'+(st.dayShift?' (+1)':'');
+  const timeStr=st.time+'h';
   const isFinished=g.finished==='TRUE'||g.finished===true;
   const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
   const stadium=getStadium(g.stadium_id);
-  const venueStr=stadium?`${stadium.name_en}, ${stadium.city_en}`:'';
+  const cityStr=stadium?stadium.city_en:'';
+  const venueStr=stadium?stadium.name_en:'';
+  const dt=new Date(g.local_date);
+  const dateStr=dt.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
+  const typeLabels={group:`Grupo ${g.group}`,r32:'Ronda de 32',r16:'Octavos',qf:'Cuartos',sf:'Semifinal',third:'3er Puesto',final:'Final'};
+  const sl=typeLabels[g.type]||g.group||'';
+  const grpColor=GROUP_COLORS[g.group]||'#666';
   let scoreHtml;
   if(isFinished){
-    scoreHtml=`<span class="match-score">${g.home_score??''}-${g.away_score??''}</span> <span class="badge-final">Final</span>`;
+    scoreHtml=`<span class="cal-score" style="color:#27ae60">${g.home_score??''}-${g.away_score??''}</span> <span class="badge-final">Final</span>`;
   }else if(isLive){
-    scoreHtml=`<span class="match-score">${g.home_score??''}-${g.away_score??''}</span> <span class="badge-live">Live</span>`;
+    scoreHtml=`<span class="cal-score" style="color:#e74c3c">${g.home_score??''}-${g.away_score??''}</span> <span class="badge-live">Live</span>`;
   }else{
-    scoreHtml=`<span class="match-vs">VS</span>`;
+    scoreHtml=`<span class="cal-score cal-time">${timeStr}</span>`;
   }
-  return `<div class="match-card">
-    <div class="match-date">
-      <div class="day">${dateStr}</div>
-      <div class="time">${timeStr}</div>
-      ${venueStr?`<div style="font-size:.55rem;color:#5a5f73;margin-top:2px">${venueStr}</div>`:''}
-    </div>
-    <div class="match-teams">
-      <div class="team-inline" data-team="${homeId}">${homeFlag?`<img src="${homeFlag}" alt="" loading="lazy">`:''}${homeName}</div>
+  return `<div class="cal-card${isTodayMatch(g)?' today':''}">
+    <div class="cal-city">${cityStr}</div>
+    <div class="cal-teams">
+      <div class="cal-team" data-team="${homeId}">
+        ${homeFlag?`<img src="${homeFlag}" alt="" loading="lazy">`:''}
+        <span class="cal-name">${homeName}</span>
+      </div>
       ${scoreHtml}
-      <div class="team-inline" data-team="${awayId}">${awayFlag?`<img src="${awayFlag}" alt="" loading="lazy">`:''}${awayName}</div>
+      <div class="cal-team" data-team="${awayId}">
+        ${awayFlag?`<img src="${awayFlag}" alt="" loading="lazy">`:''}
+        <span class="cal-name">${awayName}</span>
+      </div>
+    </div>
+    <div class="cal-bottom">
+      <span>${dateStr}</span>
+      ${venueStr?`<span>${venueStr}</span>`:''}
+      <span class="cal-group" style="color:${grpColor}">${sl}</span>
     </div>
   </div>`;
 }
@@ -729,7 +740,7 @@ function openTeamModal(team){
       const adjDate=new Date(g.local_date);
       if(st.dayShift) adjDate.setDate(adjDate.getDate()+st.dayShift);
       const dateStr=adjDate.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
-      const timeStr=st.time+'h'+(st.dayShift?' (+1)':'');
+      const timeStr=st.time+'h';
       const isFinished=g.finished==='TRUE'||g.finished===true;
       const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
       const stadium=getStadium(g.stadium_id);
@@ -910,7 +921,7 @@ function renderSpain(){
           const adjDate=new Date(g.local_date);
           if(st.dayShift) adjDate.setDate(adjDate.getDate()+st.dayShift);
           const d=adjDate.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
-          const t=st.time+'h'+(st.dayShift?' (+1)':'');
+          const t=st.time+'h';
           const isF=g.finished==='TRUE'||g.finished===true;
           const isL=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isF;
           const std=getStadium(g.stadium_id);
@@ -921,7 +932,7 @@ function renderSpain(){
           let sc;
           if(isF) sc=`<span class="cal-score" style="color:#27ae60">${g.home_score??''}-${g.away_score??''}</span>`;
           else if(isL) sc=`<span class="cal-score" style="color:#e74c3c">${g.home_score??''}-${g.away_score??''}</span>`;
-          else sc=`<span class="cal-score" style="color:#7a7f93;font-size:.75rem">VS</span>`;
+          else sc=`<span class="cal-score cal-time">${t}</span>`;
           const badge=isF?' <span class="badge-final">Final</span>':(isL?' <span class="badge-live">Live</span>':'');
           const td=isTodayMatch(g);
 return `<div class="cal-card${td?' today':''}">
@@ -938,7 +949,7 @@ return `<div class="cal-card${td?' today':''}">
               </div>
             </div>
             <div class="cal-bottom">
-              <span>${d} ${t}</span>
+              <span>${d}</span>
               ${v?`<span>${v}</span>`:''}
               <span class="cal-group" style="color:${grpColor}">${sl}</span>
             </div>
