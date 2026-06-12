@@ -905,7 +905,9 @@ function renderSpain(){
           else if(isL) sc=`<span class="cal-score" style="color:#e74c3c">${g.home_score??''}-${g.away_score??''}</span>`;
           else sc=`<span class="cal-score" style="color:#7a7f93;font-size:.75rem">VS</span>`;
           const badge=isF?' <span class="badge-final">Final</span>':(isL?' <span class="badge-live">Live</span>':'');
-return `<div class="cal-card${isTodayMatch(g)?' today':''}">
+          const td=isTodayMatch(g);
+return `<div class="cal-card${td?' today':''}">
+            ${td?'<div style="background:#f0a500;color:#0e1018;font-size:.6rem;font-weight:700;text-align:center;padding:2px 0;border-radius:6px;margin-bottom:4px">HOY</div>':''}
             <div class="cal-city">${c}</div>
             <div class="cal-teams">
               <div class="cal-team" style="color:${isHome?'#f0a500':'#e4e6eb'}">
