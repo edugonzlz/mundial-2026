@@ -373,15 +373,16 @@ function isTodayMatch(g){
   const r=m.getUTCFullYear()===n.getUTCFullYear()&&
           m.getUTCMonth()===n.getUTCMonth()&&
           m.getUTCDate()===n.getUTCDate();
-  console.log('isTodayMatch debug:', {
-    match: g.home_team_name_en+' vs '+g.away_team_name_en,
-    local_date: g.local_date,
-    dayShift: st.dayShift,
-    matchUTC: d.toISOString(),
-    mUTC: m.toISOString()+' (UTC date='+m.getUTCDate()+')',
-    nUTC: n.toISOString()+' (UTC date='+n.getUTCDate()+')',
-    result: r
-  });
+  if(r || g.local_date?.startsWith('06/12')){
+    console.log('isTodayMatch debug:', {
+      match: g.home_team_name_en+' vs '+g.away_team_name_en,
+      local_date: g.local_date,
+      dayShift: st.dayShift,
+      mDate: m.getUTCDate(),
+      nDate: n.getUTCDate(),
+      result: r
+    });
+  }
   return r;
 }
 
