@@ -43,6 +43,9 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .cal-filter select:focus{border-color:#f0a500}
 .cal-toggle{background:#1a1d29;border:1px solid #2a2d3a;border-radius:8px;color:#7a7f93;width:30px;height:30px;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;padding:0;line-height:1}
 .cal-toggle:hover{color:#f0a500;border-color:#f0a50040}
+.cal-past{display:flex;align-items:center;gap:4px;font-size:.7rem;color:#7a7f93;cursor:pointer;user-select:none;padding:2px 0}
+.cal-past input{accent-color:#f0a500;cursor:pointer;width:13px;height:13px}
+.cal-past:has(input:checked){color:#e4e6eb}
 .rules-box{background:#141720;border:1px solid #2a2d3a;border-radius:10px;padding:.7rem 1rem;margin-bottom:.75rem;font-size:.72rem;display:none}
 .rules-box.show{display:block}
 .rules-title{font-weight:700;color:#f0a500;margin-bottom:.5rem;font-size:.78rem}
@@ -289,7 +292,7 @@ const GROUP_COLORS = {
   I:'#27AE60',J:'#8E44AD',K:'#D35400',L:'#C0392B'
 };
 
-const state = { teams:[], groups:[], games:[], stadiums:[], interval:null, calendarGroup:'' };
+const state = { teams:[], groups:[], games:[], stadiums:[], interval:null, calendarGroup:'', showPast:false };
 
 async function fetchJSON(url){
   const r=await fetch(url);
@@ -397,7 +400,11 @@ function renderGroupFilters(){
       <option value="">Todos los grupos</option>
       ${letters.split('').map(l=>`<option value="${l}">Grupo ${l}</option>`).join('')}
     </select>
-    <button class="cal-toggle" id="cal-toggle-btn" title="Reglas de avance">&#8505;</button>`;
+    <button class="cal-toggle" id="cal-toggle-btn" title="Reglas de avance">&#8505;</button>
+    <label class="cal-past" id="cal-past-label">
+      <input type="checkbox" id="cal-past-cb">
+      <span>Pasados</span>
+    </label>`;
   document.getElementById('cal-group-select').addEventListener('change',function(){
     state.calendarGroup=this.value;
     renderCalendar();
@@ -405,11 +412,15 @@ function renderGroupFilters(){
   document.getElementById('cal-toggle-btn').addEventListener('click',()=>{
     document.getElementById('rules-box').classList.toggle('show');
   });
+  document.getElementById('cal-past-cb').addEventListener('change',function(){
+    state.showPast=this.checked;
+    renderCalendar();
+  });
 }
 
 function renderCalendar(){
   const el=document.getElementById('calendar-content');
-  let filtered=[...state.games].filter(g=>g.type==='group'&&g.finished!=='TRUE'&&g.finished!==true);
+  let filtered=[...state.games].filter(g=>g.type==='group'&&(state.showPast||(g.finished!=='TRUE'&&g.finished!==true)));
   if(state.calendarGroup){
     filtered=filtered.filter(g=>g.group===state.calendarGroup||
       (g.type!=='group'&&g.home_team_name_en&&g.away_team_name_en));
