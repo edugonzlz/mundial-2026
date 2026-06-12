@@ -111,6 +111,15 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .modal-body .match-date-sep{font-size:.75rem;font-weight:700;color:#7a7f93;padding:.5rem 0;border-bottom:1px solid #2a2d3a;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.5px}
 .leaflet-popup-content-wrapper{background:#1a1d29!important;color:#e4e6eb!important;border-radius:10px!important;border:1px solid #2a2d3a!important;box-shadow:0 4px 20px rgba(0,0,0,.5)!important}
 .leaflet-popup-tip{background:#1a1d29!important;border:1px solid #2a2d3a!important}
+.error-overlay{display:none;position:fixed;inset:0;background:#0e1018;z-index:2000;align-items:center;justify-content:center;padding:2rem}
+.error-overlay.open{display:flex}
+.error-box{max-width:520px;text-align:center}
+.error-box .icon{font-size:3rem;margin-bottom:1rem}
+.error-box h2{font-size:1.3rem;margin:0 0 .5rem;color:#e4e6eb}
+.error-box p{font-size:.85rem;color:#7a7f93;line-height:1.5;margin:0 0 .75rem}
+.error-box code{display:inline-block;background:#1a1d29;color:#f0a500;padding:.3rem .8rem;border-radius:6px;font-size:.9rem;border:1px solid #2a2d3a;margin:.25rem 0}
+.error-box .btn{display:inline-block;background:#f0a500;color:#0e1018;border:none;border-radius:8px;padding:.6rem 1.4rem;font-size:.85rem;font-weight:700;cursor:pointer;text-decoration:none;margin:.75rem 0 0}
+.error-box .btn:hover{background:#e09400}
 .leaflet-popup-content{margin:10px 14px!important;font-family:inherit!important}
 .stadium-popup+.leaflet-popup .leaflet-popup-close-button{color:#7a7f93!important;font-size:18px!important}
 .stadium-pin{background:0 0!important;border:none!important}
@@ -279,6 +288,20 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
       <button id="modal-close" class="modal-close">&times;</button>
     </div>
     <div id="modal-body" class="modal-body"></div>
+  </div>
+</div>
+
+<div id="error-overlay" class="error-overlay">
+  <div class="error-box">
+    <div class="icon">&#9888;</div>
+    <h2>No se pudieron cargar los datos</h2>
+    <p>El navegador bloquea las peticiones al abrir el archivo localmente con <code>file://</code>.</p>
+    <p>Para visualizar el dise&ntilde;o en local, levanta un servidor HTTP:</p>
+    <code>python3 -m http.server 8000</code>
+    <p>o ejecuta el script incluido:</p>
+    <code>./server.sh</code>
+    <p>Luego abre <strong>http://localhost:8000</strong> en tu navegador.</p>
+    <a class="btn" href="http://localhost:8000" target="_blank">Ir a localhost:8000</a>
   </div>
 </div>
 
@@ -512,8 +535,17 @@ async function refresh(){
     document.getElementById('bracket-loading').style.display='none';
   }catch(e){
     console.error('Error al cargar datos:', e);
+    if(location.protocol==='file:'||e instanceof TypeError){
+      showError();
+    }
   }
 }
+
+function showError(){
+  document.getElementById('error-overlay').classList.add('open');
+}
+
+if(location.protocol==='file:') showError();
 
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
