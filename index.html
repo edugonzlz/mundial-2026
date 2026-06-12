@@ -360,11 +360,20 @@ function spainTime(localDateStr, stadiumId){
   return {time:String(h).padStart(2,'0')+':'+String(m).padStart(2,'0'), dayShift};
 }
 
+function parseDate(str){
+  const p=str.split(' ')[0].split('-').map(Number);
+  return new Date(p[0],p[1]-1,p[2]);
+}
+function todaySpain(){
+  const d=new Date();
+  const utc=Date.UTC(d.getFullYear(),d.getMonth(),d.getDate());
+  return new Date(utc+2*3600000);
+}
 function isTodayMatch(g){
   const st=spainTime(g.local_date,g.stadium_id);
-  const d=new Date(g.local_date);
+  const d=parseDate(g.local_date);
   if(st.dayShift) d.setDate(d.getDate()+st.dayShift);
-  const now=new Date();
+  const now=todaySpain();
   return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()&&d.getDate()===now.getDate();
 }
 
