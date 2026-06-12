@@ -1141,7 +1141,7 @@ function renderBracket(){
   </div></div>`;
 }
 
-document.querySelector('[data-tab="map"]').addEventListener('click',()=>{
+document.querySelectorAll('.tab-btn[data-tab="map"]').forEach(btn=>btn.addEventListener('click',()=>{
   const tryInit=()=>{
     if(!state.stadiums||!state.stadiums.length){setTimeout(tryInit,100);return}
     initMap();
@@ -1151,11 +1151,11 @@ document.querySelector('[data-tab="map"]').addEventListener('click',()=>{
     },300);
   };
   setTimeout(tryInit,200);
-});
+}));
 // init spain when tab is first shown
-document.querySelector('[data-tab="spain"]').addEventListener('click',()=>{
+document.querySelectorAll('.tab-btn[data-tab="spain"]').forEach(btn=>btn.addEventListener('click',()=>{
   setTimeout(()=>document.getElementById('spain-loading').style.display='none',100);
-});
+}));
 </script>
 
 </body>
