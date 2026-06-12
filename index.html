@@ -591,6 +591,12 @@ document.getElementById('hamburger-btn').addEventListener('click',function(){
   m.classList.toggle('open');
   this.innerHTML=m.classList.contains('open')?'&#10005;':'&#9776;';
 });
+document.getElementById('mobile-menu').addEventListener('click',function(e){
+  if(e.target===this){
+    this.classList.remove('open');
+    document.getElementById('hamburger-btn').innerHTML='&#9776;';
+  }
+});
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
