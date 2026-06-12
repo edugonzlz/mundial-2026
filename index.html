@@ -43,8 +43,11 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .cal-filter select:focus{border-color:#f0a500}
 .cal-toggle{background:#1a1d29;border:1px solid #2a2d3a;border-radius:8px;color:#7a7f93;width:30px;height:30px;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;padding:0;line-height:1}
 .cal-toggle:hover{color:#f0a500;border-color:#f0a50040}
-.cal-past select{background:#1a1d29;color:#e4e6eb;border:1px solid #2a2d3a;border-radius:6px;padding:.25rem .5rem;font-size:.7rem;cursor:pointer;outline:none}
-.cal-past select:focus{border-color:#f0a500}
+.cal-toggle-group{display:flex;gap:0}
+.cal-toggle-group button{background:#1a1d29;color:#7a7f93;border:1px solid #2a2d3a;padding:.25rem .55rem;font-size:.7rem;cursor:pointer;transition:all .15s}
+.cal-toggle-group button:first-child{border-radius:6px 0 0 6px}
+.cal-toggle-group button:last-child{border-radius:0 6px 6px 0}
+.cal-toggle-group button.active{background:#f0a500;color:#0e1018;border-color:#f0a500;font-weight:700}
 .rules-box{background:#141720;border:1px solid #2a2d3a;border-radius:10px;padding:.7rem 1rem;margin-bottom:.75rem;font-size:.72rem;display:none}
 .rules-box.show{display:block}
 .rules-title{font-weight:700;color:#f0a500;margin-bottom:.5rem;font-size:.78rem}
@@ -423,13 +426,10 @@ function renderGroupFilters(){
       ${letters.split('').map(l=>`<option value="${l}">Grupo ${l}</option>`).join('')}
     </select>
     <button class="cal-toggle" id="cal-toggle-btn" title="Reglas de avance">&#8505;</button>
-    <label class="cal-past">
-      <select id="cal-filter-select">
-        <option value="upcoming">Próximos</option>
-        <option value="past">Pasados</option>
-        <option value="all">Todos</option>
-      </select>
-    </label>`;
+    <div class="cal-toggle-group" id="cal-toggle-group">
+      <button class="active" data-filter="upcoming">Pr&oacute;ximos</button>
+      <button data-filter="past">Pasados</button>
+    </div>`;
   document.getElementById('cal-group-select').addEventListener('change',function(){
     state.calendarGroup=this.value;
     renderCalendar();
@@ -437,8 +437,12 @@ function renderGroupFilters(){
   document.getElementById('cal-toggle-btn').addEventListener('click',()=>{
     document.getElementById('rules-box').classList.toggle('show');
   });
-  document.getElementById('cal-filter-select').addEventListener('change',function(){
-    state.calendarFilter=this.value;
+  document.getElementById('cal-toggle-group').addEventListener('click',function(e){
+    const btn=e.target.closest('button');
+    if(!btn) return;
+    this.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    state.calendarFilter=btn.dataset.filter;
     renderCalendar();
   });
 }
@@ -448,8 +452,7 @@ function renderCalendar(){
   let filtered=[...state.games].filter(g=>{
     if(g.type!=='group') return false;
     if(state.calendarFilter==='upcoming') return g.finished!=='TRUE'&&g.finished!==true;
-    if(state.calendarFilter==='past') return g.finished==='TRUE'||g.finished===true;
-    return true;
+    return g.finished==='TRUE'||g.finished===true;
   });
   if(state.calendarGroup){
     filtered=filtered.filter(g=>g.group===state.calendarGroup||
