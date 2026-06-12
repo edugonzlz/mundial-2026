@@ -70,6 +70,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .calendar-list{display:flex;flex-direction:column;gap:0}
 .date-sep{font-size:.75rem;font-weight:700;color:#7a7f93;padding:.6rem .25rem .4rem;margin-top:.5rem;border-bottom:1px solid #2a2d3a;text-transform:uppercase;letter-spacing:.5px}
 .date-sep:first-child{margin-top:0}
+.today-badge{display:inline-block;background:#f0a500;color:#0e1018;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:6px;vertical-align:middle}
 .cal-card{display:flex;flex-direction:column;gap:6px;background:#1a1d29;border:1px solid #2a2d3a;border-radius:12px;padding:.85rem 1rem;margin-top:.6rem;transition:all .15s}
 .cal-card.today,.b-match.today{border-color:#f0a500!important;box-shadow:0 0 0 1px #f0a500,0 0 12px rgba(240,165,0,.15)}
 .cal-card:hover,.b-match:hover{border-color:#f0a50040}
@@ -489,8 +490,9 @@ function renderCalendar(){
     grouped[key].push(g);
   });
 
-  el.innerHTML=Object.entries(grouped).map(([date,games])=>
-    `<div class="date-sep">${date.charAt(0).toUpperCase()+date.slice(1)}</div>`+
+  el.innerHTML=Object.entries(grouped).map(([date,games])=>{
+    const todayBadge=games.some(g=>isTodayMatch(g))?' <span class="today-badge">HOY</span>':'';
+    return `<div class="date-sep">${date.charAt(0).toUpperCase()+date.slice(1)}${todayBadge}</div>`+
     games.map(g=>{
       const homeTeam=getTeam(g.home_team_id);
       const awayTeam=getTeam(g.away_team_id);
@@ -519,10 +521,7 @@ function renderCalendar(){
       const cityStr=stadium?stadium.city_en:'';
       const venueStr=stadium?stadium.name_en:'';
 
-      const td=isTodayMatch(g);
-
-      return `<div class="cal-card${td?' today':''}">
-        ${td?'<div style="background:#f0a500;color:#0e1018;font-size:.6rem;font-weight:700;text-align:center;padding:2px 0;border-radius:6px;margin-bottom:4px">HOY</div>':''}
+      return `<div class="cal-card${isTodayMatch(g)?' today':''}">
         <div class="cal-city">${cityStr}</div>
         <div class="cal-teams">
           <div class="cal-team" data-team="${homeId}">
@@ -542,7 +541,7 @@ function renderCalendar(){
         </div>
       </div>`;
     }).join('')
-  ).join('');
+  }).join('');
   el.querySelectorAll('.cal-team[data-team]').forEach(c=>c.addEventListener('click',e=>{
     e.stopPropagation();
     const team=getTeam(c.dataset.team);
@@ -910,7 +909,6 @@ function renderSpain(){
           const badge=isF?' <span class="badge-final">Final</span>':(isL?' <span class="badge-live">Live</span>':'');
           const td=isTodayMatch(g);
 return `<div class="cal-card${td?' today':''}">
-            ${td?'<div style="background:#f0a500;color:#0e1018;font-size:.6rem;font-weight:700;text-align:center;padding:2px 0;border-radius:6px;margin-bottom:4px">HOY</div>':''}
             <div class="cal-city">${c}</div>
             <div class="cal-teams">
               <div class="cal-team" style="color:${isHome?'#f0a500':'#e4e6eb'}">
