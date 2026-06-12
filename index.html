@@ -174,10 +174,14 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .timeline-item{display:flex;align-items:center;gap:12px;padding:8px 12px;background:#141720;border-radius:10px;transition:all .15s}
 .timeline-item:hover{background:#1a1d29}
 .timeline-item .tyear{font-size:.82rem;font-weight:700;color:#f0a500;width:80px;flex-shrink:0;line-height:1.2}
+.timeline-item .tmatch{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.timeline-item .tchamp,.timeline-item .trunner{display:flex;align-items:center;gap:4px;min-width:0}
+.timeline-item .tchamp .tname,.timeline-item .trunner .tname{font-size:.8rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.timeline-item .tchamp .tname{color:#e4e6eb}
+.timeline-item .trunner .tname{font-weight:400;color:#7a7f93;font-size:.72rem}
 .timeline-item .tflags{display:flex;align-items:center;gap:4px;flex-shrink:0}
 .timeline-item .tflags img{width:28px;height:18px;border-radius:2px;object-fit:cover}
-.timeline-item .tvs{font-size:.65rem;color:#7a7f93;font-weight:600;text-align:center}
-.timeline-item .tscore{font-size:.85rem;font-weight:800;color:#e4e6eb;min-width:44px;text-align:center}
+.timeline-item .tscore{font-size:.85rem;font-weight:800;color:#e4e6eb;min-width:36px;text-align:center;flex-shrink:0}
 .records-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem}
 .record-card{background:#141720;border-radius:10px;padding:.85rem;text-align:center;border:1px solid transparent;transition:all .15s}
 .record-card:hover{border-color:#f0a50040;transform:translateY(-2px)}
@@ -213,9 +217,9 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
   .rules-box.show{display:block}
   .timeline-item{flex-wrap:wrap;gap:4px 6px;padding:8px 10px}
   .timeline-item .tyear{width:70px;font-size:.65rem}
+  .timeline-item .tmatch{flex-direction:column;align-items:flex-start;gap:2px;flex:1}
   .timeline-item .tflags img{width:24px;height:15px}
-  .timeline-item .tscore{font-size:.75rem;min-width:36px}
-  .timeline-item div[style*="min-width"]{min-width:auto!important;font-size:.7rem!important}
+  .timeline-item .tscore{font-size:.75rem;min-width:36px;text-align:left;padding-left:28px}
 }
 </style>
 </head>
@@ -1056,11 +1060,11 @@ function renderHistory(){
           const cColor=titleColors[m.c]||'#f0a500';
           return `<div class="timeline-item" style="border-left:3px solid ${cColor}">
             <span class="tyear">${m.y} ${m.h}</span>
-            <div class="tflags"><img src="${cFlag}" alt="" loading="lazy"></div>
-            <div style="font-size:.8rem;font-weight:700;min-width:60px">${m.c}</div>
-            <div class="tscore">${m.s}</div>
-            <div class="tflags"><img src="${rFlag}" alt="" loading="lazy"></div>
-            <div style="font-size:.72rem;color:#7a7f93;min-width:60px">${m.r}</div>
+            <div class="tmatch">
+              <div class="tchamp"><div class="tflags"><img src="${cFlag}" alt="" loading="lazy"></div><span class="tname">${m.c}</span></div>
+              <div class="tscore">${m.s}</div>
+              <div class="trunner"><div class="tflags"><img src="${rFlag}" alt="" loading="lazy"></div><span class="tname">${m.r}</span></div>
+            </div>
           </div>`;
         }).join('')}
       </div>
