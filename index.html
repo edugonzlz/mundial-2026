@@ -361,8 +361,8 @@ function spainTime(localDateStr, stadiumId){
 }
 
 function parseDate(str){
-  const p=str.split(' ')[0].split('-').map(Number);
-  return new Date(p[0],p[1]-1,p[2]);
+  const p=str.split(' ')[0].split('/');
+  return new Date(p[2],p[0]-1,p[1]);
 }
 function todaySpain(){
   const d=new Date();
