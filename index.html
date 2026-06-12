@@ -78,7 +78,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .cal-card.today,.b-match.today{border-color:#f0a500!important;box-shadow:0 0 0 1px #f0a500,0 0 12px rgba(240,165,0,.15)}
 .cal-card:hover,.b-match:hover{border-color:#f0a50040}
 .cal-card .cal-city{font-size:.6rem;font-weight:600;color:#7a7f93;text-transform:uppercase;letter-spacing:.5px}
-.cal-card .cal-date{font-size:.7rem;color:#7a7f93;text-align:center;margin-bottom:4px}
+.cal-card .cal-date{font-size:.8rem;font-weight:600;color:#c4c7d4;text-align:center;margin-bottom:4px}
 .cal-card .cal-teams{display:flex;align-items:center;justify-content:center;gap:12px}
 .cal-card .cal-team{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:color .15s;flex:1}
 .cal-card .cal-team:hover{color:#f0a500}
@@ -952,6 +952,7 @@ function renderSpain(){
           const td=isTodayMatch(g);
 return `<div class="cal-card${td?' today':''}">
             <div class="cal-city">${c}</div>
+            <div class="cal-date">${d}</div>
             <div class="cal-teams">
               <div class="cal-team" style="color:${isHome?'#f0a500':'#e4e6eb'}">
                 ${team.flag?`<img src="${team.flag}" alt="" loading="lazy">`:''}
@@ -964,7 +965,6 @@ return `<div class="cal-card${td?' today':''}">
               </div>
             </div>
             <div class="cal-bottom">
-              <span>${d}</span>
               ${v?`<span>${v}</span>`:''}
               <span class="cal-group" style="color:${grpColor}">${sl}</span>
             </div>
