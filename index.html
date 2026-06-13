@@ -148,7 +148,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 /* bracket */
 .bracket-wrap{overflow-x:auto;padding-bottom:.5rem;-webkit-overflow-scrolling:touch}
 .bracket{display:flex;gap:0;min-width:950px}
-.bracket-col{display:flex;flex-direction:column;justify-content:space-around;flex:1;position:relative;padding:0 6px}
+.bracket-col{display:flex;flex-direction:column;flex:1;min-height:0;position:relative;padding:0 6px}
 .bracket-col h4{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#f0a500;text-align:center;padding:.4rem 0;margin-bottom:4px;border-bottom:1px solid #2a2d3a;flex-shrink:0}
 .b-match{background:#1a1d29;border:1px solid #2a2d3a;border-radius:8px;padding:.45rem .6rem;margin:3px 0;font-size:.7rem;transition:all .15s;flex-shrink:0}
 .b-match:hover{border-color:#f0a50040;transform:scale(1.02)}
@@ -1141,11 +1141,20 @@ function renderBracket(){
     const games=grouped[round]||[];
     const expected=counts[round];
     const fill=expected-games.length;
-    let html='';
-    for(let i=0;i<fill;i++) html+=`<div style="height:0"></div>`;
-    html+=games.map(g=>cardHtml(g)).join('');
+    const gap={r32:1,r16:2,qf:4,sf:8,third:16,final:16}[round]||1;
+    const half=gap/2;
+    let html=`<div style="flex:${half};min-height:8px"></div>`;
+    for(let i=0;i<fill;i++){
+      if(i>0||games.length) html+=`<div style="flex:${gap};min-height:8px"></div>`;
+      html+=`<div style="height:0"></div>`;
+    }
+    games.forEach((g,i)=>{
+      if(i>0||fill>0) html+=`<div style="flex:${gap};min-height:8px"></div>`;
+      html+=cardHtml(g);
+    });
+    html+=`<div style="flex:${half};min-height:8px"></div>`;
     if(round==='final'&&grouped['third']){
-      html+=`<div style="border-top:1px solid #2a2d3a;margin:8px 0;padding-top:4px;font-size:.55rem;font-weight:700;text-align:center;color:#7a7f93;text-transform:uppercase;letter-spacing:.5px">3er Puesto</div>`;
+      html+=`<div style="border-top:1px solid #2a2d3a;margin:8px 0 4px;padding-top:4px;font-size:.55rem;font-weight:700;text-align:center;color:#7a7f93;text-transform:uppercase;letter-spacing:.5px">3er Puesto</div>`;
       html+=(grouped['third']||[]).map(g=>cardHtml(g)).join('');
     }
     return html;
@@ -1158,10 +1167,12 @@ function renderBracket(){
   el.innerHTML=`<div class="rules-box" style="display:block">Eliminatorias desde el ${firstDate}</div>
     <div class="bracket-wrap"><div class="bracket">
     ${roundKeys.filter(r=>r!=='third'&&r!=='final').map(r=>`<div class="bracket-col">
-      <h4>${roundLabels[r]}</h4>${colHtml(r)}
+      <h4>${roundLabels[r]}</h4>
+      <div style="display:flex;flex-direction:column;flex:1;min-height:0">${colHtml(r)}</div>
     </div>`).join('')}
     <div class="bracket-col" style="max-width:160px">
-      <h4>Fase Final</h4>${colHtml('final')}
+      <h4>Fase Final</h4>
+      <div style="display:flex;flex-direction:column;flex:1;min-height:0">${colHtml('final')}</div>
     </div>
   </div></div>`;
 }
