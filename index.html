@@ -1151,7 +1151,12 @@ function renderBracket(){
     return html;
   }
 
-  el.innerHTML=`<div class="bracket-wrap"><div class="bracket">
+  const firstKO = knockouts.reduce((a, g) => g.local_date < a ? g.local_date : a, knockouts[0]?.local_date || '');
+  const fd = firstKO ? firstKO.split(' ')[0].split('/') : null;
+  const firstDate = fd ? new Date(fd[2], fd[0]-1, fd[1]).toLocaleDateString('es-ES', {day:'numeric', month:'long', year:'numeric'}) : '';
+
+  el.innerHTML=`<div class="rules-box" style="display:block">Eliminatorias desde el ${firstDate}</div>
+    <div class="bracket-wrap"><div class="bracket">
     ${roundKeys.filter(r=>r!=='third'&&r!=='final').map(r=>`<div class="bracket-col">
       <h4>${roundLabels[r]}</h4>${colHtml(r)}
     </div>`).join('')}
