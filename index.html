@@ -75,7 +75,8 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .date-sep:first-child{margin-top:0}
 .today-badge{display:inline-block;background:#f0a500;color:#0e1018;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:6px;vertical-align:middle}
 .cal-card{display:flex;flex-direction:column;gap:7px;background:#1a1d29;border:1px solid #2a2d3a;border-radius:12px;padding:1rem 1.15rem;margin-top:.6rem;transition:all .15s}
-.cal-card.today,.b-match.today{border-color:#f0a500!important;box-shadow:0 0 0 1px #f0a500,0 0 12px rgba(240,165,0,.15)}
+.cal-card.today{border-color:#f0a500!important;box-shadow:0 0 0 1px #f0a500,0 0 12px rgba(240,165,0,.15)}
+.b-match.today{border-color:silver!important;box-shadow:0 0 0 1px silver,0 0 8px rgba(192,192,192,.15)}
 .cal-card:hover,.b-match:hover{border-color:#f0a50040}
 .cal-card .cal-city{font-size:.6rem;font-weight:600;color:#7a7f93;text-transform:uppercase;letter-spacing:.5px}
 .cal-card .cal-date{font-size:.8rem;font-weight:600;color:#c4c7d4;text-align:center;margin-bottom:4px}
@@ -156,11 +157,17 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .b-match .bm-team{display:flex;align-items:center;gap:4px;font-weight:600;font-size:.72rem;justify-content:center;width:100%}
 .b-match .bm-team img{width:24px;height:16px;border-radius:2px;object-fit:cover;flex-shrink:0}
 .b-match .bm-team .bm-name{white-space:nowrap}
-.b-match .bm-score{font-weight:800;font-size:.8rem;color:#f0a500;text-align:center;min-width:24px;flex-shrink:0}
+.b-match .bm-score{font-weight:800;font-size:.82rem;color:#f0a500;text-align:center;min-width:28px;flex-shrink:0}
 .b-match .bm-vs{font-size:.65rem;color:#7a7f93;font-weight:600;text-align:center}
-.b-match .bm-meta{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:4px;font-size:.55rem;color:#5a5f73}
+.b-match .bm-date{font-size:.65rem;font-weight:600;color:var(--round-color,#7a7f93);text-align:center;margin-bottom:5px;letter-spacing:.3px}
+.b-match .bm-meta{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:5px;font-size:.52rem;color:#5a5f73}
 .b-match.bm-tbd .bm-team{color:#7a7f93;font-weight:400;font-size:.62rem}
 .b-match.bm-tbd .bm-team .bm-name{font-style:italic}
+.bracket-col[data-round=r32] .b-match{border-color:#4dabf7}.bracket-col[data-round=r32]{--round-color:#4dabf7}
+.bracket-col[data-round=r16] .b-match{border-color:#69db7c}.bracket-col[data-round=r16]{--round-color:#69db7c}
+.bracket-col[data-round=qf] .b-match{border-color:#20c997}.bracket-col[data-round=qf]{--round-color:#20c997}
+.bracket-col[data-round=sf] .b-match{border-color:#da77f2}.bracket-col[data-round=sf]{--round-color:#da77f2}
+.bracket-col[data-round=final] .b-match,.bracket-col[data-round=final] .b-match.bm-tbd{border-color:#ff6b6b}.bracket-col[data-round=final]{--round-color:#ff6b6b}
 /* history tab */
 .history-section{background:#1a1d29;border:1px solid #2a2d3a;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem}
 .history-section h3{font-size:.85rem;font-weight:700;color:#f0a500;margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.5px}
@@ -1124,10 +1131,11 @@ function renderBracket(){
     const adjDate=new Date(g.local_date);
     if(st.dayShift) adjDate.setDate(adjDate.getDate()+st.dayShift);
     const dateStr=adjDate.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});
-    if(st.time!=='--:--') metaParts.push(dateStr+' '+st.time+'h');
+    const timeStr=st.time+'h';
     if(stadium) metaParts.push(stadium.name_en);
 
     return `<div class="b-match${tbdClass}${isTodayMatch(g)?' today':''}">
+      <div class="bm-date">${dateStr} · ${timeStr}</div>
       <div class="bm-teams">
         <div class="bm-team">${homeFlag?`<img src="${homeFlag}">`:''}<span class="bm-name">${homeName}</span></div>
         ${sc}
@@ -1166,11 +1174,11 @@ function renderBracket(){
 
   el.innerHTML=`<div class="rules-box" style="display:block">Eliminatorias desde el ${firstDate}</div>
     <div class="bracket-wrap"><div class="bracket">
-    ${roundKeys.filter(r=>r!=='third'&&r!=='final').map(r=>`<div class="bracket-col">
+    ${roundKeys.filter(r=>r!=='third'&&r!=='final').map(r=>`<div class="bracket-col" data-round="${r}">
       <h4>${roundLabels[r]}</h4>
       <div style="display:flex;flex-direction:column;flex:1;min-height:0">${colHtml(r)}</div>
     </div>`).join('')}
-    <div class="bracket-col" style="max-width:160px">
+    <div class="bracket-col" data-round="final">
       <h4>Fase Final</h4>
       <div style="display:flex;flex-direction:column;flex:1;min-height:0">${colHtml('final')}</div>
     </div>
