@@ -405,23 +405,34 @@ function isMatchLive(g){
   if (isF) return false;
   if (g.time_elapsed && g.time_elapsed !== 'notstarted') return true;
   const st = spainTime(g.local_date, g.stadium_id);
-  const d = parseDate(g.local_date);
-  if (st.dayShift) d.setDate(d.getDate() + st.dayShift);
+  const p = g.local_date.split(' ');
+  const dateParts = p[0].split('/');
+  let d = parseInt(dateParts[1]);
+  if (st.dayShift) d += st.dayShift;
   const [hh, mm] = st.time.split(':').map(Number);
-  const matchStart = new Date(d.getTime() + hh * 3600000 + mm * 60000);
-  const now = new Date(Date.now() + 2 * 3600000);
+  const matchStart = new Date(
+    Date.UTC(parseInt(dateParts[2]), parseInt(dateParts[0]) - 1, d, hh, mm)
+    - 2 * 3600000
+  );
+  const now = new Date();
   const diff = (now - matchStart) / 3600000;
   return diff >= 0 && diff < 3;
 }
 function isTodayMatch(g){
   const st=spainTime(g.local_date,g.stadium_id);
-  const d=parseDate(g.local_date);
-  if(st.dayShift) d.setDate(d.getDate()+st.dayShift);
-  const m=new Date(d.getTime()+2*3600000);
-  const n=new Date(Date.now()+2*3600000);
-  return m.getUTCFullYear()===n.getUTCFullYear()&&
-          m.getUTCMonth()===n.getUTCMonth()&&
-          m.getUTCDate()===n.getUTCDate();
+  const p=g.local_date.split(' ');
+  const dateParts=p[0].split('/');
+  let d=parseInt(dateParts[1]);
+  if(st.dayShift) d+=st.dayShift;
+  const [hh,mm]=st.time.split(':').map(Number);
+  const matchStart=new Date(
+    Date.UTC(parseInt(dateParts[2]),parseInt(dateParts[0])-1,d,hh,mm)
+    -2*3600000
+  );
+  const now=new Date();
+  return matchStart.getUTCFullYear()===now.getUTCFullYear()&&
+          matchStart.getUTCMonth()===now.getUTCMonth()&&
+          matchStart.getUTCDate()===now.getUTCDate();
 }
 
 function renderGroups(){
