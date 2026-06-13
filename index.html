@@ -1136,10 +1136,17 @@ function renderBracket(){
     const stadium=getStadium(g.stadium_id);
     const tbdClass=isTBD?' bm-tbd':'';
 
-    let sc;
-    if(isFinished) sc=`<span class="bm-score">${g.home_score??''}-${g.away_score??''}</span>`;
-    else if(isLive) sc=`<span class="bm-score">${g.home_score??''}-${g.away_score??''}</span>`;
-    else sc=`<span class="bm-vs">VS</span>`;
+    let sc, badge;
+    if(isFinished){
+      sc=`<span class="bm-score" style="color:#27ae60">${g.home_score??''}-${g.away_score??''}</span>`;
+      badge=' <span class="badge-final">Final</span>';
+    }else if(isLive){
+      sc=`<span class="bm-score" style="color:#e74c3c">${g.home_score??''}-${g.away_score??''}</span>`;
+      badge=' <span class="badge-live">Live</span>';
+    }else{
+      sc=`<span class="bm-vs">VS</span>`;
+      badge='';
+    }
 
     const metaParts=[];
     const adjDate=new Date(g.local_date);
@@ -1153,7 +1160,7 @@ function renderBracket(){
       <span class="bm-id">#${g.id}</span>
       <div class="bm-teams">
         <div class="bm-team">${homeFlag?`<img src="${homeFlag}">`:''}<span class="bm-name">${homeName}</span></div>
-        ${sc}
+        <div style="display:flex;align-items:center;gap:4px">${sc}${badge}</div>
         <div class="bm-team">${awayFlag?`<img src="${awayFlag}">`:''}<span class="bm-name">${awayName}</span></div>
       </div>
       ${metaParts.length?`<div class="bm-meta"><span>${metaParts.join(' · ')}</span></div>`:''}
