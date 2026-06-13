@@ -1151,12 +1151,12 @@ function renderBracket(){
     games.forEach((g,i)=>{
       if(i>0||fill>0) html+=`<div style="flex:${gap};min-height:8px"></div>`;
       html+=cardHtml(g);
+      if(round==='final'&&i===games.length-1&&grouped['third']){
+        html+=`<div style="border-top:1px solid #2a2d3a;margin:6px 0 2px;padding-top:4px;font-size:.55rem;font-weight:700;text-align:center;color:#7a7f93;text-transform:uppercase;letter-spacing:.5px">3er Puesto</div>`;
+        html+=(grouped['third']||[]).map(g=>cardHtml(g)).join('');
+      }
     });
     html+=`<div style="flex:${half};min-height:8px"></div>`;
-    if(round==='final'&&grouped['third']){
-      html+=`<div style="border-top:1px solid #2a2d3a;margin:8px 0 4px;padding-top:4px;font-size:.55rem;font-weight:700;text-align:center;color:#7a7f93;text-transform:uppercase;letter-spacing:.5px">3er Puesto</div>`;
-      html+=(grouped['third']||[]).map(g=>cardHtml(g)).join('');
-    }
     return html;
   }
 
