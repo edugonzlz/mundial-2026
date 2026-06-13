@@ -151,7 +151,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .bracket{display:flex;gap:0;min-width:1200px}
 .bracket-col{display:flex;flex-direction:column;flex:1;min-height:0;position:relative;padding:0 6px}
 .bracket-col h4{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#f0a500;text-align:center;padding:.4rem 0;margin-bottom:4px;border-bottom:1px solid #2a2d3a;flex-shrink:0}
-.b-match{background:#1a1d29;border:1px solid #2a2d3a;border-radius:8px;padding:.45rem .6rem;margin:3px 0;font-size:.7rem;transition:all .15s;flex-shrink:0}
+.b-match{background:#1a1d29;border:1px solid #2a2d3a;border-radius:8px;padding:.45rem .6rem;margin:3px 0;font-size:.7rem;transition:all .15s;flex-shrink:0;position:relative}
 .b-match:hover{border-color:#f0a50040;transform:scale(1.02)}
 .b-match .bm-teams{display:flex;flex-direction:column;align-items:center;gap:3px}
 .b-match .bm-team{display:flex;align-items:center;gap:4px;font-weight:600;font-size:.72rem;justify-content:center;width:100%}
@@ -159,7 +159,8 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .b-match .bm-team .bm-name{white-space:nowrap}
 .b-match .bm-score{font-weight:800;font-size:.82rem;color:#f0a500;text-align:center;min-width:28px;flex-shrink:0}
 .b-match .bm-vs{font-size:.65rem;color:#7a7f93;font-weight:600;text-align:center}
-.b-match .bm-date{font-size:.65rem;font-weight:600;color:var(--round-color,#7a7f93);text-align:center;margin-bottom:5px;letter-spacing:.3px}
+.b-match .bm-date{font-size:.65rem;font-weight:600;color:var(--round-color,#7a7f93);text-align:center;margin-bottom:5px;padding-right:18px;letter-spacing:.3px}
+.b-match .bm-id{position:absolute;top:4px;right:6px;font-size:.45rem;color:#5a5f73;font-weight:500}
 .b-match .bm-meta{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:5px;font-size:.52rem;color:#5a5f73}
 .b-match.bm-tbd .bm-team{color:#7a7f93;font-weight:400;font-size:.62rem}
 .b-match.bm-tbd .bm-team .bm-name{font-style:italic}
@@ -1132,10 +1133,11 @@ function renderBracket(){
     if(st.dayShift) adjDate.setDate(adjDate.getDate()+st.dayShift);
     const dateStr=adjDate.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});
     const timeStr=st.time+'h';
-    if(stadium) metaParts.push(stadium.name_en);
+    if(stadium) metaParts.push(`${stadium.city_en}, ${stadium.name_en}`);
 
     return `<div class="b-match${tbdClass}${isTodayMatch(g)?' today':''}">
       <div class="bm-date">${dateStr} · ${timeStr}</div>
+      <span class="bm-id">#${g.id}</span>
       <div class="bm-teams">
         <div class="bm-team">${homeFlag?`<img src="${homeFlag}">`:''}<span class="bm-name">${homeName}</span></div>
         ${sc}
