@@ -392,6 +392,19 @@ function parseDate(str){
   const p=str.split(' ')[0].split('/');
   return new Date(p[2],p[0]-1,p[1]);
 }
+function isMatchLive(g){
+  const isF = g.finished === 'TRUE' || g.finished === true;
+  if (isF) return false;
+  if (g.time_elapsed && g.time_elapsed !== 'notstarted') return true;
+  const st = spainTime(g.local_date, g.stadium_id);
+  const d = parseDate(g.local_date);
+  if (st.dayShift) d.setDate(d.getDate() + st.dayShift);
+  const [hh, mm] = st.time.split(':').map(Number);
+  const matchStart = new Date(d.getTime() + hh * 3600000 + mm * 60000);
+  const now = new Date(Date.now() + 2 * 3600000);
+  const diff = (now - matchStart) / 3600000;
+  return diff >= 0 && diff < 3;
+}
 function isTodayMatch(g){
   const st=spainTime(g.local_date,g.stadium_id);
   const d=parseDate(g.local_date);
@@ -521,7 +534,7 @@ function renderCalendar(){
       const st=spainTime(g.local_date,g.stadium_id);
       const timeStr=st.time+'h';
       const isFinished=g.finished==='TRUE'||g.finished===true;
-      const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
+      const isLive=isMatchLive(g);
       const stadium=getStadium(g.stadium_id);
       const grp=g.group||'';
       const typeLabels={group:`Grupo ${grp}`,r32:'Ronda de 32',r16:'Octavos',qf:'Cuartos',sf:'Semifinal',third:'3er Puesto',final:'Final'};
@@ -645,7 +658,7 @@ function buildMatchHtml(g){
   const st=spainTime(g.local_date,g.stadium_id);
   const timeStr=st.time+'h';
   const isFinished=g.finished==='TRUE'||g.finished===true;
-  const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
+  const isLive=isMatchLive(g);
   const stadium=getStadium(g.stadium_id);
   const cityStr=stadium?stadium.city_en:'';
   const venueStr=stadium?stadium.name_en:'';
@@ -752,7 +765,7 @@ function openTeamModal(team){
       const st=spainTime(g.local_date,g.stadium_id);
       const timeStr=st.time+'h';
       const isFinished=g.finished==='TRUE'||g.finished===true;
-      const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
+      const isLive=isMatchLive(g);
       const stadium=getStadium(g.stadium_id);
       const venueStr=stadium?stadium.name_en:'';
       const cityStr=stadium?stadium.city_en:'';
@@ -938,7 +951,7 @@ function renderSpain(){
           const d=adjDate.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
           const t=st.time+'h';
           const isF=g.finished==='TRUE'||g.finished===true;
-          const isL=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isF;
+          const isL=isMatchLive(g);
           const std=getStadium(g.stadium_id);
           const v=std?std.name_en:'';
           const c=std?std.city_en:'';
@@ -1096,7 +1109,7 @@ function renderBracket(){
     const homeFlag=homeTeam?homeTeam.flag:'';
     const awayFlag=awayTeam?awayTeam.flag:'';
     const isFinished=g.finished==='TRUE'||g.finished===true;
-    const isLive=g.time_elapsed&&g.time_elapsed!=='notstarted'&&!isFinished;
+    const isLive=isMatchLive(g);
     const isTBD=!g.home_team_name_en&&!g.away_team_name_en;
     const st=spainTime(g.local_date,g.stadium_id);
     const stadium=getStadium(g.stadium_id);
