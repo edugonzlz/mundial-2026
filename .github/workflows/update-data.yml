@@ -11,7 +11,7 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Download data from API
         run: |
           curl -s -o data/teams.json https://worldcup26.ir/get/teams
