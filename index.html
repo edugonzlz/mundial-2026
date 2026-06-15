@@ -86,7 +86,7 @@ header p{color:#7a7f93;font-size:.85rem;margin-top:4px}
 .cal-card .cal-team img{width:48px;height:32px;border-radius:4px;object-fit:cover;box-shadow:0 2px 6px rgba(0,0,0,.4)}
 .cal-card .cal-team .cal-name{font-size:.9rem;font-weight:800;text-align:center;line-height:1.2;max-width:100px}
 .cal-card .cal-score{font-size:1rem;font-weight:800;min-width:34px;text-align:center;flex-shrink:0}
-.cal-card .cal-score.cal-time{font-size:1.15rem;color:#f0a500}
+.cal-card .cal-score.cal-time{font-size:1.15rem;color:#27ae60}
 .cal-card .cal-bottom{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;font-size:.65rem;color:#7a7f93}
 .cal-card .cal-bottom span{background:#0f1117;padding:2px 8px;border-radius:4px;white-space:nowrap}
 .cal-card .cal-bottom .cal-group{font-weight:700}
@@ -522,6 +522,7 @@ function renderCalendar(){
   }
   const sorted=filtered
     .sort((a,b)=>new Date(a.local_date)-new Date(b.local_date)||a.id-b.id);
+  if(state.calendarFilter==='past') sorted.reverse();
 
   const grouped={};
   sorted.forEach(g=>{
