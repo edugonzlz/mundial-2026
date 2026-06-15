@@ -412,11 +412,11 @@ function isMatchLive(g){
   const [hh, mm] = st.time.split(':').map(Number);
   const matchStart = new Date(
     Date.UTC(parseInt(dateParts[2]), parseInt(dateParts[0]) - 1, d, hh, mm)
-    - 2 * 3600000
   );
   const now = new Date();
-  const diff = (now - matchStart) / 3600000;
-  return diff >= 0 && diff < 3;
+  const spainNow = new Date(now.getTime() + 2 * 3600000);
+  const diff = (spainNow - matchStart) / 3600000;
+  return diff >= 0 && diff < 2;
 }
 function isTodayMatch(g){
   const st=spainTime(g.local_date,g.stadium_id);
@@ -424,15 +424,11 @@ function isTodayMatch(g){
   const dateParts=p[0].split('/');
   let d=parseInt(dateParts[1]);
   if(st.dayShift) d+=st.dayShift;
-  const [hh,mm]=st.time.split(':').map(Number);
-  const matchStart=new Date(
-    Date.UTC(parseInt(dateParts[2]),parseInt(dateParts[0])-1,d,hh,mm)
-    -2*3600000
-  );
   const now=new Date();
-  return matchStart.getUTCFullYear()===now.getUTCFullYear()&&
-          matchStart.getUTCMonth()===now.getUTCMonth()&&
-          matchStart.getUTCDate()===now.getUTCDate();
+  const spainNow=new Date(now.getTime()+2*3600000);
+  return parseInt(dateParts[2])===spainNow.getUTCFullYear()&&
+          parseInt(dateParts[0])-1===spainNow.getUTCMonth()&&
+          d===spainNow.getUTCDate();
 }
 
 function renderGroups(){
