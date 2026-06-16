@@ -12,12 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Download data from API
-        run: |
-          curl -s -o data/teams.json https://worldcup26.ir/get/teams
-          curl -s -o data/groups.json https://worldcup26.ir/get/groups
-          curl -s -o data/games.json https://worldcup26.ir/get/games
-          curl -s -o data/stadiums.json https://worldcup26.ir/get/stadiums
+      - name: Download teams
+        run: curl -sSfL --connect-timeout 15 --max-time 45 --retry 5 --retry-delay 15 --retry-all-errors -o data/teams.json https://worldcup26.ir/get/teams
+      - name: Download groups
+        run: curl -sSfL --connect-timeout 15 --max-time 45 --retry 5 --retry-delay 15 --retry-all-errors -o data/groups.json https://worldcup26.ir/get/groups
+      - name: Download games
+        run: curl -sSfL --connect-timeout 15 --max-time 45 --retry 5 --retry-delay 15 --retry-all-errors -o data/games.json https://worldcup26.ir/get/games
+      - name: Download stadiums
+        run: curl -sSfL --connect-timeout 15 --max-time 45 --retry 5 --retry-delay 15 --retry-all-errors -o data/stadiums.json https://worldcup26.ir/get/stadiums
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions"
