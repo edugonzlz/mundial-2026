@@ -363,11 +363,12 @@ async function fetchJSON(url){
 }
 
 async function loadAll(){
+  const _t=Date.now();
   const [tData,gData,gamesData,sData]=await Promise.all([
-    fetchJSON(API_BASE+'data/teams.json'),
-    fetchJSON(API_BASE+'data/groups.json'),
-    fetchJSON(API_BASE+'data/games.json'),
-    fetchJSON(API_BASE+'data/stadiums.json')
+    fetchJSON(API_BASE+'data/teams.json?_='+_t),
+    fetchJSON(API_BASE+'data/groups.json?_='+_t),
+    fetchJSON(API_BASE+'data/games.json?_='+_t),
+    fetchJSON(API_BASE+'data/stadiums.json?_='+_t)
   ]);
   state.teams=tData.teams||tData;
   state.groups=gData.groups||gData;
