@@ -513,13 +513,11 @@ function renderGroupFilters(){
 function renderCalendar(){
   const el=document.getElementById('calendar-content');
   let filtered=[...state.games].filter(g=>{
-    if(g.type!=='group') return false;
     if(state.calendarFilter==='upcoming') return g.finished!=='TRUE'&&g.finished!==true;
     return g.finished==='TRUE'||g.finished===true;
   });
   if(state.calendarGroup){
-    filtered=filtered.filter(g=>g.group===state.calendarGroup||
-      (g.type!=='group'&&g.home_team_name_en&&g.away_team_name_en));
+    filtered=filtered.filter(g=>g.group===state.calendarGroup||g.type!=='group');
   }
   const sorted=filtered
     .sort((a,b)=>new Date(a.local_date)-new Date(b.local_date)||a.id-b.id);
